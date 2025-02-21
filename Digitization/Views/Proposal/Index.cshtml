@@ -1,0 +1,457 @@
+﻿<style>
+	.inputdiv {
+		width: 100%;
+		height: 100%;
+		margin: auto 2px;
+		padding: 10px 0 10px 0;
+	}
+
+	input,
+	textarea, select {
+		width: 100%;
+		padding: 3px;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		color: #000;
+		font-size: 14px;
+		margin: 0 5px 0 0px;
+		height: 100%;
+	}
+
+		input::placeholder, textarea::placeholder, select::placeholder, {
+			color: #707070;
+		}
+
+	.suggestions {
+		border: 1px solid #ccc;
+		max-height: 150px;
+		overflow-y: auto;
+		position: absolute;
+		background: white;
+		width: 200px;
+		display: none;
+	}
+
+		.suggestions div {
+			padding: 5px;
+			cursor: pointer;
+		}
+
+			.suggestions div:hover {
+				background: #f0f0f0;
+			}
+
+
+
+	#tablemaster {
+		width: 100%;
+	}
+
+	.table_input {
+		background: none;
+		border: none;
+	}
+
+		/* When the input is focused, keep it the same (no border, no background) */
+		.table_input:focus {
+			background: none;
+			border: none;
+			box-shadow: none;
+			outline: none;
+		}
+
+	.submit-btn {
+		background: linear-gradient(80deg, rgb(102 239 142) 0%, rgb(33 181 8) 100%);
+		padding: 3px 50px;
+		border-radius: 4px;
+		box-shadow: 2px 2px 7px #a2a2a2;
+		margin: 15px 0px;
+		cursor: pointer;
+		color: #505050;
+		font-weight: 600;
+	}
+
+		.submit-btn:hover {
+			background: #00b600;
+		}
+</style>
+
+<style>
+	/* Simple modal styling */
+	#challanModal {
+		display: none;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		background: white;
+		padding: 20px;
+		box-shadow: 0px 0px 10px gray;
+		border-radius: 5px;
+		z-index: 1000;
+		width: 300px;
+		z-index: 1000;
+	}
+
+	#popupOverlay {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		z-index: 999;
+	}
+
+	#challanModal h3 {
+		text-align: center;
+	}
+
+	#challanModal p {
+		text-align: center;
+		margin: 30px;
+	}
+
+	#challanModal .circle {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		border: 2px solid black;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 20px;
+		font-weight: bold;
+		color: black;
+		background: #3ce85e;
+		margin: 30px auto;
+	}
+
+	#challanModal #pdfButton {
+		background: linear-gradient(90deg, rgba(59, 130, 246, 1) 0%, rgba(29, 78, 216, 1) 100%);
+		padding: 5px 10px;
+		border-radius: 4px;
+		box-shadow: 2px 2px 5px gray;
+		color: white;
+		font-weight: 600;
+	}
+
+	#challanModal #okButton {
+		background: linear-gradient(90deg, rgb(59 246 129) 0%, rgb(29 216 57) 100%);
+		padding: 5px 50px;
+		border-radius: 4px;
+		box-shadow: 2px 2px 5px gray;
+		color: black;
+		font-weight: 600;
+	}
+
+</style>
+
+<link href="~/css/GenerateProposal-1.css" rel="stylesheet" />
+<div style="" id="nonetopdiv"></div>
+
+<div id="maincontainer">
+	<div style="" id="topdiv">
+		<div class="inputdiv">
+			@* <label>Party Name</label> *@
+			<input type="text" id="partyInput" placeholder="Party Name" autocomplete="off" />
+			<div id="suggestionBox" class="suggestions"></div>
+		</div>
+
+		<div id="contactPersonDiv" class="inputdiv">
+			@* <label>Contact Person</label> *@
+			<select id="contactDropdown">
+				<option value="">Select Contact Person</option>
+			</select>
+		</div>
+
+		<div id="addressDiv" class="inputdiv">
+			@* <label>Address</label> *@
+			<select id="addressDropdown">
+				<option value="">Select Address</option>
+			</select>
+		</div>
+
+		<div id="mobileDiv" class="inputdiv">
+			@* <label>Mobile No</label> *@
+			<input type="text" id="mobileNo" placeholder="Mobile Number" />
+		</div>
+
+		<div id="SenderNameDiv" class="inputdiv">
+			@* <label>Mobile No</label> *@
+			<input type="text" id="senderName" placeholder="Sender Name" />
+		</div>
+
+	</div>
+	<input type="text" name="name" placeholder="Subject" id="contentofsubject" style="height:40px;" />
+
+	<div class="mx-auto mt-3" id="tablemaster">
+		<table class="w-full overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md" id="dynamicTable">
+			<thead class="z-10 bg-[#2582b0] text-xs uppercase text-white">
+				<tr>
+					<th class="px-1 py-2 text-center">Sr. No.</th>
+					<th class="px-4 py-2">Item Desciption</th>
+					<th class="px-4 py-2 text-center">HSN/SAC NO.</th>
+					<th class="px-4 py-2 text-center">Unit Rate</th>
+					<th class="px-4 py-2 text-center">QTY</th>
+					<th class="px-4 py-2 text-center">Amount</th>
+					<th class="px-4 py-2 text-center">Delivery Time</th>
+				</tr>
+			</thead>
+			<tbody class="divide-y divide-gray-200 text-sm">
+				<tr class="transition odd:bg-gray-50 hover:bg-gray-100">
+					<td class="px-1 py-2 text-center">1</td>
+					<td class="px-4 py-2 text-left"><input type="text" class="table_input w-full rounded-md border border-gray-300" oninput="addNewRow(this)" ></td>
+					<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center" oninput="addNewRow(this)"></td>
+					<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center" oninput="addNewRow(this)"></td>
+					<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center" oninput="addNewRow(this)"></td>
+					<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center" oninput="addNewRow(this)"></td>
+					<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center" oninput="addNewRow(this)"></td>
+				</tr>
+			</tbody>
+		</table>
+		<div style="display:flex; justify-content: end; ">
+			<buttton class="submit-btn">Submit</buttton>
+		</div>
+
+	</div>
+</div>
+
+<div id="popupOverlay"></div>
+<div id="challanModal">
+	<div class="circle">&#10004;</div>
+	<h3>Proposal Data Saved Successfully!</h3>
+	<p>Challan No : <span id="challanNo"></span></p>
+	<h3 id="realchallanNo" style="display:none;"></h3>
+	<div style="display: flex; justify-content: space-evenly;">
+		<button id="pdfButton">Download PDF</button>
+		<button id="okButton">OK</button>
+	</div>
+</div>
+
+<script>
+	function addNewRow(input) {
+		let row = input.parentElement.parentElement;
+		let table = document.getElementById("dynamicTable").getElementsByTagName('tbody')[0];
+
+		// Check if it's the last row
+		if (row === table.lastElementChild) {
+			let rowCount = table.rows.length + 1;
+			let newRow = document.createElement("tr");
+			newRow.className = "transition odd:bg-gray-50 hover:bg-gray-100";
+
+			newRow.innerHTML = `
+				<td class="px-4 py-2 text-center">${rowCount}</td>
+				<td class="px-4 py-2 text-left"><input type="text" class="table_input w-full rounded-md border border-gray-300" oninput="addNewRow(this)"></td>
+				<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center"  oninput="addNewRow(this)"></td>
+				<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center" oninput="addNewRow(this)"></td>
+				<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center" oninput="addNewRow(this)"></td>
+				<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center" oninput="addNewRow(this)"></td>
+				<td class="px-4 py-2 text-center"><input type="text" class="table_input w-full rounded-md border border-gray-300 text-center" oninput="addNewRow(this)"></td>
+			`;
+
+			table.appendChild(newRow);
+		}
+	}
+</script>
+
+<script>
+	document.getElementById("partyInput").addEventListener("input", function () {
+		let query = this.value;
+		if (query.length < 2) {
+			document.getElementById("suggestionBox").style.display = "none";
+			return;
+		}
+
+		fetch(`/Proposal/SearchParty?term=${query}`)
+			.then(response => response.json())
+			.then(data => {
+				let suggestionBox = document.getElementById("suggestionBox");
+				suggestionBox.innerHTML = "";
+
+				if (data.length > 0) {
+					suggestionBox.style.display = "block";
+					data.forEach(item => {
+						let div = document.createElement("div");
+						div.textContent = item;
+						div.addEventListener("click", function () {
+							document.getElementById("partyInput").value = item;
+							suggestionBox.style.display = "none";
+					   //     document.getElementById("contactPersonDiv").style.display = "block";
+							loadContactDropdown(item);
+						});
+						suggestionBox.appendChild(div);
+					});
+				} else {
+					suggestionBox.style.display = "none";
+				}
+			});
+	});
+
+	function loadContactDropdown(partyName) {
+		fetch(`/Proposal/GetContactPersons?partyName=${partyName}`)
+			.then(response => response.json())
+			.then(data => {
+				let contactDropdown = document.getElementById("contactDropdown");
+				contactDropdown.innerHTML = `<option value="">Select Contact Person</option>`;
+
+				if (data.length > 0) {
+					data.forEach(contact => {
+						let option = document.createElement("option");
+						option.value = contact;
+						option.textContent = contact;
+						contactDropdown.appendChild(option);
+					});
+
+				   // document.getElementById("contactPersonDiv").style.display = "block";
+
+					contactDropdown.addEventListener("change", function () {
+						let selectedContact = this.value;
+						if (selectedContact) {
+							loadAddressDropdown(partyName, selectedContact);
+						} else {
+						   // document.getElementById("addressDiv").style.display = "none";
+						}
+					});
+				} else {
+				   // document.getElementById("contactPersonDiv").style.display = "none";
+				}
+			});
+	}
+
+	function loadAddressDropdown(partyName, contactPerson) {
+		fetch(`/Proposal/GetAddresses?partyName=${partyName}&contactPerson=${contactPerson}`)
+			.then(response => response.json())
+			.then(data => {
+				let addressDropdown = document.getElementById("addressDropdown");
+				addressDropdown.innerHTML = `<option value="">Select Address</option>`;
+
+				if (data.length > 0) {
+					data.forEach(address => {
+						let option = document.createElement("option");
+						option.value = address;
+						option.textContent = address;
+						addressDropdown.appendChild(option);
+					});
+
+				   // document.getElementById("addressDiv").style.display = "block";
+
+					addressDropdown.addEventListener("change", function () {
+						let selectedAddress = this.value;
+						if (selectedAddress) {
+							loadMobileNumber(partyName, contactPerson, selectedAddress);
+						} else {
+						   // document.getElementById("mobileDiv").style.display = "none";
+						}
+					});
+				} else {
+				 //   document.getElementById("addressDiv").style.display = "none";
+				}
+			});
+	}
+
+	function loadMobileNumber(partyName, contactPerson, address) {
+		fetch(`/Proposal/GetMobileNumber?partyName=${partyName}&contactPerson=${contactPerson}&address=${address}`)
+			.then(response => response.json())
+			.then(data => {
+				let mobileInput = document.getElementById("mobileNo");
+				if (data) {
+					mobileInput.value = data;
+				 //   document.getElementById("mobileDiv").style.display = "block";
+				} else {
+				 //   document.getElementById("mobileDiv").style.display = "none";
+				}
+			});
+	}
+
+	document.addEventListener("click", function (event) {
+		if (!document.getElementById("partyInput").contains(event.target)) {
+			document.getElementById("suggestionBox").style.display = "none";
+		}
+	});
+
+
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function () {
+		$(".submit-btn").click(function () {
+				let tableData = [];
+	$("#dynamicTable tbody tr").each(function () {
+		let row = {
+			ItemDescription: $(this).find("td:eq(1) input").val()?.trim() || null,
+			HSN_SAC_NO: $(this).find("td:eq(2) input").val()?.trim() || null,
+			Unit_Rate: $(this).find("td:eq(3) input").val()?.trim(),
+			Qty: $(this).find("td:eq(4) input").val()?.trim(),
+			Amount: $(this).find("td:eq(5) input").val()?.trim(),
+			DeliveryTime: $(this).find("td:eq(6) input").val()?.trim() || null
+		};
+
+		// Convert numeric values; if empty, store null
+		row.Unit_Rate = row.Unit_Rate ? parseInt(row.Unit_Rate) || 0 : null;
+		row.Qty = row.Qty ? parseInt(row.Qty) || 0 : null;
+		row.Amount = row.Amount ? parseInt(row.Amount) || 0 : null;
+
+		tableData.push(row);
+	});
+
+	console.log(tableData);
+
+
+			// Get other form data (if needed)
+			let partyInput = $("#partyInput").val();
+			let person = $("#contactDropdown").val();
+			let senderName = $("#senderName").val();
+			let contentofsubject = $("#contentofsubject").val();
+			console.log("partyInput" + partyInput);
+			console.log("person" + person);
+			console.log("senderName" + senderName);
+			console.log("contentofsubject" + contentofsubject);
+			let data = {
+				PartyName: partyInput,
+				Person: person,
+				SenderName: senderName,
+				Subject: contentofsubject,
+				
+				Items: tableData
+
+			};
+
+			$.ajax({
+				url: "/Proposal/SaveData",
+				method: "POST",
+				contentType: "application/json",
+				data: JSON.stringify(data),
+				success: function (response) {
+						// Display Challan No. in the modal
+					$("#challanNo").text(response.proposalNo);  // response.challanNo should be returned from the server
+					$("#realchallanNo").text("Challan No: " + response.realProposalNo);  // response.challanNo should be returned from the server
+					$("#challanModal").show(); // Show the modal
+					$("#popupOverlay").show(); // Show the modal
+
+					console.log("Data saved! Challan No1: " + response.proposalNo);
+					console.log("Data saved! Challan No2: " + response.realProposalNo);
+				},
+				error: function (xhr, status, error) {
+					alert("Error saving data: " + error);
+				}
+			});
+		});
+
+
+		// Handle PDF button click
+		$("#pdfButton").click(function() {
+			let realProposalNo = $("#realchallanNo").text().split(":")[1].trim(); // Get Challan No.
+			window.location.href = `/Proposal/DownloadPDF?challanNo=${realProposalNo}`; // Replace with your actual download endpoint
+		});
+
+		// Handle OK button click
+		$("#okButton").click(function() {
+			location.reload(); // Reload the page when OK is clicked
+		});
+	});
+
+</script>

@@ -1,0 +1,260 @@
+﻿@model IEnumerable<Digitization.ViewModel.ProjectMasterViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="min-h-screen w-full py-2">
+    <div class="m-auto flex w-full justify-center">
+        <!-- Page Title -->
+        @* <h1 class="text-center text-4xl font-bold tracking-tight text-gray-700">Your Projects</h1> *@
+
+        <!-- Create New Button -->
+        @* <div class="text-center">
+            <a asp-action="Create"
+               class="customBlue customBlue2Hover inline-block rounded-full px-8 py-3 text-lg font-medium text-white shadow-md transition hover:shadow-lg">
+                + Create New Project
+            </a>
+        </div> *@
+
+        <form asp-action="Create" class="w-full max-w-[1200px] py-2">
+            <!-- Validation Summary -->
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success border-l-4 mb-4 border-green-500 bg-green-100 p-3 text-green-700">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-success border-l-4 mb-4 border-red-500 bg-red-100 p-3 text-red-700">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+
+            <!-- Form Grid -->
+            <div class="grid w-full items-center justify-center gap-2 sm:grid-cols-1 lg:grid-cols-5">
+                <!-- Project ID -->
+                <div class="">
+                    @* <label name="ProjectId" class="block text-sm font-medium text-gray-700">
+                        Project ID <span class="text-red-500">*</span>
+                    </label> *@
+                    <input name="ProjectId" aria-label="Project ID" placeholder="Enter a unique Project ID"
+                           class="w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-sm shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500" />
+                    @* <span asp-validation-for="ProjectId" class="text-xs text-red-500"></span> *@
+                </div>
+
+                <!-- Project Name -->
+                <div>
+                    @* <label name="ProjectName" class="block text-sm font-medium text-gray-700">
+                        Project Name <span class="text-red-500">*</span>
+                    </label> *@
+                    <input name="ProjectName" aria-label="Project Name" placeholder="Enter Project Name"
+                           class="w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-sm shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500" />
+                    @* <span asp-validation-for="ProjectName" class="text-xs text-red-500"></span> *@
+                </div>
+
+                <!-- Customer Name -->
+                <div>
+                    @* <label name="CustomerName" class="block text-sm font-medium text-gray-700">
+                        Customer Name <span class="text-red-500">*</span>
+                    </label> *@
+                    <input name="CustomerName" aria-label="Customer Name" placeholder="Enter Customer Name"
+                           class="w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-sm shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500" />
+                    @* <span asp-validation-for="CustomerName" class="text-xs text-red-500"></span> *@
+                </div>
+
+                <!-- Total Budget -->
+                @* <div>
+                    <label name="TotalBudget" class="block text-sm font-medium text-gray-700">
+                        Total Budget (₹)
+                    </label>
+                    <input name="TotalBudget" aria-label="Total Budget" placeholder="Enter the total budget"
+                           class="w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-sm shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500" />
+                    <span asp-validation-for="TotalBudget" class="text-xs text-red-500"></span>
+                </div> *@
+
+                <!-- Description -->
+                <div class="">
+                    @* <label name="Description" class="block text-sm font-medium text-gray-700">
+                        Description <span class="text-red-500">*</span>
+                    </label> *@
+                    <textarea name="Description" rows="1" aria-label="Project Description" placeholder="Project description"
+                              class="block w-full rounded-md border border-gray-300 bg-gray-50 p-3 text-sm shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    @* <span asp-validation-for="Description" class="text-xs text-red-500"></span> *@
+                </div>
+
+                <!-- Action Button -->
+                <button type="submit" class="col-auto flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-3 text-center text-sm font-semibold text-white shadow-md transition-all duration-300 ease-in-out hover:from-blue-600 hover:to-blue-800 focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50">
+                    <span class="flex items-center gap-2">
+                        <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Submit
+                    </span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <style>
+        .chart-container {
+            width: 300px; /* Fixed width */
+            height: 200px; /* Fixed height */
+        }
+    </style>
+
+    <!-- Table View -->
+    <div class="m-auto mt-2 max-w-[1400px] overflow-x-auto px-4">
+        <div class="overflow-hidden rounded-lg shadow-lg">
+            <table class="min-w-full table-auto border-collapse bg-white">
+                <thead class="sticky top-0 bg-[#2582b0] text-white">
+                    <tr class="border-b">
+                        <th class="px-2 py-2 text-center text-xs font-bold uppercase">Project</th>
+                        <th class="px-2 py-2 text-center text-xs font-bold uppercase">Project ID</th>
+                        <th class="px-2 py-2 text-center text-xs font-bold uppercase">Customer Name</th>
+                        <th class="px-2 py-2 text-center text-xs font-bold uppercase">Entry Date</th>
+                        <th class="px-2 py-2 text-center text-xs font-bold uppercase">Total Expense</th>
+                        <th class="px-2 py-2 text-center text-xs font-bold uppercase">Expense Chart</th>
+                        @* <th class="px-2 py-2 text-xs font-bold uppercase">Actions</th> *@
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @foreach (var item in Model)
+                    {
+                        <tr class="transition duration-200 hover:bg-gray-50">
+                            <td class="whitespace-nowrap px-2 text-center text-sm font-medium text-gray-800">
+                                @Html.DisplayFor(modelItem => item.ProjectName)
+                            </td>
+                            <td class="whitespace-nowrap px-2 text-center text-sm text-gray-600">
+                                @Html.DisplayFor(modelItem => item.ProjectId)
+                            </td>
+                            <td class="whitespace-nowrap px-2 text-center text-sm text-gray-600">
+                                @Html.DisplayFor(modelItem => item.CustomerName)
+                            </td>
+                            <td class="whitespace-nowrap px-2 text-center text-sm text-gray-600">
+                                @(item.EntryDTime.HasValue ? item.EntryDTime.Value.ToString("dd MMM yyyy hh:mm tt") : "N/A")
+                            </td>
+                            <td class="whitespace-nowrap px-2 text-center text-sm font-semibold text-green-600">
+                                ₹@Html.DisplayFor(modelItem => item.TotalExpense)
+                            </td>
+                            <td class="px-2 text-center text-sm">
+                                <div class="chart-container text-center">
+                                    <canvas id="chart-@item.ProjectId"></canvas>
+                                </div>
+                            </td>
+                            @* <td class="px-2 py-4 text-sm">
+                                <a href="#" class="font-medium text-indigo-600 hover:underline">View Details</a>
+                            </td> *@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var chartData = [];
+
+    @foreach (var item in Model)
+    {
+        <text>
+            chartData.push({
+                projectId: "@item.ProjectId",
+                expectedExpense: @item.ExpectedExpense,
+                currentExpense: @item.TotalExpense
+            });
+        </text>
+    }
+
+        chartData.forEach(function (item) {
+            var chartId = "chart-" + item.projectId;
+            var ctx = document.getElementById(chartId);
+
+            if (ctx) {
+                var expectedExpense = item.expectedExpense;
+                var extraExpense = Math.max(0, item.currentExpense - item.expectedExpense);
+
+                new Chart(ctx.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: ["Expense"],
+                        datasets: [
+                            {
+                                label: "Expected Expense",
+                                data: [expectedExpense],
+                                backgroundColor: "#31708F", // Dark Blue
+                                borderColor: "#31708F",
+                                borderWidth: 1,
+                                barThickness: 20 // Set the desired thickness here (e.g., 10 pixels)
+                            },
+                            {
+                                label: "Extra Expense",
+                                data: [extraExpense],
+                                backgroundColor: "rgba(255, 152, 0, 0.8)", // Orange
+                                borderColor: "rgba(255, 152, 0, 1)",
+                                borderWidth: 1,
+                                barThickness: 20 // Set the desired thickness here (e.g., 10 pixels)
+                            }
+                        ]
+                    },
+                    options: {
+                        indexAxis: 'y', // Horizontal bars
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                stacked: true,
+                                beginAtZero: true,
+                                title: { display: true, text: 'Expense (₹)', color: '#666', font: { size: 10 } },
+                                grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                            },
+                            y: {
+                                stacked: true,
+                                title: { display: true, text: 'Expense', color: '#666', font: { size: 10 } },
+                                grid: { display: true }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                position: "bottom",
+                                labels: { font: { size: 14 } }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function (context) {
+                                        var label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += '₹' + context.raw;
+                                        return label;
+                                    }
+                                }
+                            },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'end',
+                                color: '#333',
+                                font: { size: 12 },
+                                formatter: function (value) {
+                                    return '₹' + value;
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 500,
+                            easing: 'easeInOutQuart'
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

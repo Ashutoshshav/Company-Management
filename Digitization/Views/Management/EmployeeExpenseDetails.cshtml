@@ -1,0 +1,63 @@
+﻿@model Digitization.ViewModel.EmployeeExpenseDetailsViewModel
+
+@{
+    ViewData["Title"] = "Employee Expense Details";
+}
+
+<div class="container mx-auto p-4">
+    <h1 class="mb-4 text-2xl font-bold text-gray-800">Employee Expense Details</h1>
+
+    <!-- Employee Information -->
+    <div class="mb-6 rounded-lg bg-white p-4 shadow-md">
+        <h2 class="mb-4 text-xl font-semibold text-gray-700">Employee Information</h2>
+        <p class="text-gray-600"><span class="font-medium text-gray-800">Employee ID:</span> @Model.EmployeeID</p>
+        <p class="text-gray-600"><span class="font-medium text-gray-800">Employee Name:</span> @Model.EmployeeName</p>
+    </div>
+
+    <!-- Expense Details -->
+    <div class="rounded-lg bg-white p-4 shadow-md">
+        <h2 class="mb-4 text-xl font-semibold text-gray-700">Expense Details</h2>
+
+        @if (Model.PaymentApprovalViewModel != null && Model.PaymentApprovalViewModel.Any())
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto border-collapse text-left">
+                    <thead>
+                        <tr class="bg-gray-100 text-sm uppercase text-gray-600">
+                            <th class="border px-4 py-2">Record ID</th>
+                            <th class="border px-4 py-2">Project ID</th>
+                            <th class="border px-4 py-2">Expense Type</th>
+                            <th class="border px-4 py-2">Amount</th>
+                            <th class="border px-4 py-2">Expense Date</th>
+                            <th class="border px-4 py-2">Entry Date</th>
+                            <th class="border px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var expense in Model.PaymentApprovalViewModel)
+                        {
+                            <tr class="hover:bg-gray-50">
+                                <td class="border px-4 py-2">@expense.RecordID</td>
+                                <td class="border px-4 py-2">@expense.ProjectID</td>
+                                <td class="border px-4 py-2">@expense.ExpenseType</td>
+                                <td class="border px-4 py-2 text-right">@expense.Amount</td>
+                                <td class="border px-4 py-2">@expense.ExpenseDate</td>
+                                <td class="border px-4 py-2">@expense.EntryDTime</td>
+                                <td class="px-6 py-4 text-center">
+                                    <a asp-action="Details" asp-route-RecordID=@expense.RecordID asp-route-expenseType="@expense.ExpenseType"
+                                       class="inline-flex items-center rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+                                        @* <i class="fas fa-info-circle mr-2"></i> *@ Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <p class="text-gray-600">No expenses found for this employee.</p>
+        }
+    </div>
+</div>

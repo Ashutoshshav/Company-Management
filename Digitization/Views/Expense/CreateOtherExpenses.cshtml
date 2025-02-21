@@ -1,0 +1,259 @@
+﻿@model Digitization.Models.OtherExpenses
+
+@{
+	ViewData["Title"] = "CreateOtherExpenses";
+}
+
+<div class="mx-auto space-y-4 rounded-xl bg-white py-2">
+	<form asp-action="CreateOtherExpenses" class="px-5">
+		<!-- Validation Summary -->
+		<div asp-validation-summary="ModelOnly" class="text-sm text-red-500"></div>
+
+		<!-- Grid for Form Fields -->
+		<div class="rounded-lg">
+			@* <h3 class="mb-4 flex items-center gap-2 text-2xl font-semibold text-gray-800">
+				<i class="fa-solid fa-circle-info text-blue-600"></i>
+				Enter Details
+			</h3> *@
+
+			<div class="grid-cols-1 grid items-center gap-2 sm:grid-cols-7">
+				<!-- Project Dropdown -->
+				<div>
+					@* <label asp-for="ProjectID" class="block text-sm font-medium text-gray-700">
+						Project Name
+						<span class="text-xs text-gray-400">(Required)</span>
+					</label> *@
+					<select asp-for="ProjectID" id="projectDropdown"
+							class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+						<option value="" disabled selected>Project Name</option>
+						<!-- Options dynamically added -->
+					</select>
+					<span asp-validation-for="ProjectID" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Expense Type -->
+				<div>
+					@* <label asp-for="ExpenseType" class="block text-sm font-medium text-gray-700">
+						Expense Type
+					</label> *@
+					<select asp-for="ExpenseType"
+							class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+						<option disabled selected>Expense Type</option>
+						<option value="Food">Food</option>
+						<option value="Hotel">Hotel</option>
+						<option value="Official Purchase">Official Purchase</option>
+						<option value="Other">Other</option>
+					</select>
+					<span asp-validation-for="ExpenseType" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Expense Date -->
+				<div>
+					@* <label asp-for="ExpenseDate" class="block text-sm font-medium text-gray-700">
+						Expense Date
+					</label> *@
+					<input asp-for="ExpenseDate" type="date"
+						   class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+					<span asp-validation-for="ExpenseDate" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Description -->
+				<div>
+					@* <label asp-for="Description" class="block text-sm font-medium text-gray-700">
+						Description
+						<span class="text-xs text-gray-400">(Details about the expense)</span>
+					</label> *@
+					<input asp-for="Description" placeholder="Enter Description"
+						   class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+					<span asp-validation-for="Description" class="text-xs text-red-500"></span>
+				</div>
+
+				<div>
+					@* <label asp-for="Amount" class="block text-sm font-medium text-gray-700">
+						Amount (₹)
+						<span class="text-xs text-gray-400">(Enter a valid amount)</span>
+					</label> *@
+					<input asp-for="Amount" type="number" min="0" placeholder="Enter Amount (₹)"
+						   class="mt-2 block w-full appearance-none rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+					<span asp-validation-for="Amount" class="text-xs text-red-500"></span>
+				</div>
+
+				<div>
+					@* <label asp-for="Remark" class="block text-sm font-medium text-gray-700">
+						Remark
+					</label> *@
+					<textarea asp-for="Remark" placeholder="Enter Reamark(Optional)" rows="1"
+							  class="mt-2 block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"></textarea>
+					<span asp-validation-for="Remark" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Submit Button -->
+				<button type="submit" class="col-auto mt-2 flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-3 text-center text-sm font-semibold text-white shadow-md transition-all duration-300 ease-in-out hover:from-blue-600 hover:to-blue-800 focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50">
+					<span class="flex items-center gap-2">
+						<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+						</svg>
+						Submit
+					</span>
+				</button>
+				@* <div class="col-auto mt-2 flex w-full items-center justify-center">
+					<button type="submit" class="w-full rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-3 text-sm font-semibold text-white shadow-md transition-all duration-300 ease-in-out hover:from-blue-600 hover:to-blue-800 focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50 sm:w-auto">
+						<span class="flex items-center gap-2">
+							<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+								<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+							</svg>
+							Submit
+						</span>
+					</button>
+				</div> *@
+			</div>
+		</div>
+	</form>
+	<hr />
+	<!-- LIST OF OTHER EXPENSES -->
+	<div class="min-h-[500px] rounded-lg bg-white" id="tableContainer">
+		@* <h2 class="flex items-center gap-2 text-3xl font-semibold text-gray-800">
+			<svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M3 10h11M9 21V3M21 16h-8m4 5V11"></path>
+			</svg>
+			Your Other Expenses List
+		</h2> *@
+
+		<!-- Expenses Table -->
+		<div class="m-auto max-w-6xl overflow-x-auto">
+			<table class="min-w-full overflow-hidden rounded-lg border border-gray-200">
+				<thead class="bg-[#2582b0] text-xs uppercase tracking-wide text-white">
+					<tr>
+						<th class="px-3 py-2 text-center">Record ID</th>
+						<th class="px-3 py-2 text-left">Project ID</th>
+						<th class="px-3 py-2 text-left">Amount</th>
+						<th class="px-3 py-2 text-center">Expense Date</th>
+						<th class="px-3 py-2 text-center">Entry Date/Time</th>
+						@* <th class="px-3 py-2 text-left">Description</th> *@
+						<th class="px-3 py-2 text-left">Status</th>
+						<th class="px-3 py-2 text-left">Actions</th>
+					</tr>
+				</thead>
+				<tbody id="expenseTable" class="divide-y divide-gray-200 bg-white text-sm">
+					<!-- Example Row (Dynamic Data Will Be Loaded Here) -->
+					@* <tr class="transition hover:bg-gray-100">
+                            <td class="px-6 py-4">101</td>
+                            <td class="px-6 py-4">Construction Site A</td>
+                            <td class="px-6 py-4 font-semibold text-green-600">₹5,000</td>
+                            <td class="px-6 py-4">2024-01-30 12:45 PM</td>
+                            <td class="px-6 py-4">Cement purchase</td>
+                            <td class="flex justify-center space-x-3 px-6 py-4">
+                                <!-- Edit Button -->
+                                <button class="text-blue-500 transition hover:text-blue-700">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 3h10M11 7h7m-7 4h10m-10 4h7m-7 4h10"></path>
+                                    </svg>
+                                </button>
+                                <!-- Delete Button -->
+                                <button class="text-red-500 transition hover:text-red-700">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </td> 
+                    </tr>*@
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		fetch('/Home/GetProjectData')
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				let dropdownMenu = this.getElementById("projectDropdown");
+				data.forEach(item => {
+					let option = document.createElement("option");
+					option.value = item.projectId;
+					option.textContent = item.projectName;
+
+					dropdownMenu.appendChild(option);
+				});
+			});
+
+			fetch("/Expense/AllOtherExpenses")
+			.then(response => response.json())
+			.then(data => {
+				if (!data || data.length === 0) { // Check for both null and empty array
+					console.log("No data found");
+					let tableContainer = document.getElementById('tableContainer');
+					tableContainer.classList.add('hidden');
+					// Prevent multiple "No data found" messages
+					if (!document.getElementById("noDataMessage")) {
+						let para = document.createElement("p");
+						para.classList.add('text-center', 'text-gray-600')
+						para.id = "noDataMessage"; // Assign an ID to avoid duplicates
+						para.textContent = 'No data found';
+						document.body.appendChild(para);
+					}
+					return;
+				}
+
+				console.log(data);
+				let tableBody = document.getElementById("expenseTable");
+
+				let recordID = 1;
+
+				data.forEach(item => {
+					const date = new Date(item.entryDTime);
+					const date2 = new Date(item.expenseDate);
+
+					const formattedDate = new Intl.DateTimeFormat('en-GB', {
+						day: '2-digit',
+						month: 'short',
+						year: 'numeric',
+						hour: '2-digit',
+						minute: '2-digit',
+					}).format(date);
+
+					const formattedDate2 = new Intl.DateTimeFormat('en-GB', {
+						day: '2-digit',
+						month: 'short',
+						year: 'numeric',
+					}).format(date2);
+
+					let row = document.createElement("tr");
+					row.classList.add('transition', 'odd:bg-gray-50', 'hover:bg-gray-100');
+					row.innerHTML = `
+						<td class="px-3 py-2 text-center">${recordID++}</td>
+						<td class="px-3 py-2 text-left">${item.projectID}</td>
+						<td class="px-3 py-2 font-semibold text-green-600">₹${item.amount}</td>
+						<td class="px-3 py-2 text-center">${formattedDate2}</td>
+						<td class="px-3 py-2 text-center">${formattedDate}</td>
+						<td class="px-3 py-2">${item.approvalStatus}</td>
+						<td class="px-3 py-2">
+							<button class="flex items-center justify-center text-red-500 transition hover:text-red-700" onclick="deleteExpense(${item.recordID})">
+								<svg class="flex h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+								</svg>
+								Delete
+							</button>
+						</td>
+					`;
+					tableBody.appendChild(row);
+				});
+			});
+
+			// let projectDropdown = this.getElementById("projectDropdown");
+
+			// projectDropdown.addEventListener('change', (event) => {
+			//     // Get the selected ProjectId and ProjectName
+			//     let ProjectId = document.getElementById("ProjectId");
+			//     ProjectId.value = event.target.value;  // Get the selected value
+			// });
+	});
+</script>

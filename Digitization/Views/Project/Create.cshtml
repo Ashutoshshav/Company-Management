@@ -1,0 +1,91 @@
+﻿@model Digitization.Models.ProjectMaster
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 via-gray-50 to-indigo-100 px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mx-auto max-w-3xl rounded-lg bg-white p-10 shadow-2xl">
+        <!-- Title -->
+        <h1 class="text-center text-3xl font-bold text-gray-800">
+            <span class="block">Create New Project</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="mt-4 text-center text-sm text-gray-600 sm:text-base">
+            Fill in the form below to add a new project to the system.
+        </p>
+
+        <form asp-action="Create" class="mt-8 space-y-8">
+            <!-- Validation Summary -->
+            <div asp-validation-summary="ModelOnly" class="text-sm text-red-500"></div>
+
+            <!-- Form Grid -->
+            <div class="grid gap-6 sm:grid-cols-1 lg:grid-cols-2">
+                <!-- Project ID -->
+                <div>
+                    <label asp-for="ProjectId" class="block text-sm font-medium text-gray-700">
+                        Project ID <span class="text-red-500">*</span>
+                    </label>
+                    <input asp-for="ProjectId" aria-label="Project ID" placeholder="Enter a unique Project ID"
+                           class="mt-1 w-full rounded-md border border-gray-300 p-3 shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500" />
+                    <span asp-validation-for="ProjectId" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Project Name -->
+                <div>
+                    <label asp-for="ProjectName" class="block text-sm font-medium text-gray-700">
+                        Project Name <span class="text-red-500">*</span>
+                    </label>
+                    <input asp-for="ProjectName" aria-label="Project Name" placeholder="Enter the Project Name"
+                           class="mt-1 w-full rounded-md border border-gray-300 p-3 shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500" />
+                    <span asp-validation-for="ProjectName" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Customer Name -->
+                <div>
+                    <label asp-for="CustomerName" class="block text-sm font-medium text-gray-700">
+                        Customer Name <span class="text-red-500">*</span>
+                    </label>
+                    <input asp-for="CustomerName" aria-label="Customer Name" placeholder="Enter the Customer Name"
+                           class="mt-1 w-full rounded-md border border-gray-300 p-3 shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500" />
+                    <span asp-validation-for="CustomerName" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Total Budget -->
+                @* <div>
+                    <label asp-for="TotalBudget" class="block text-sm font-medium text-gray-700">
+                        Total Budget (₹)
+                    </label>
+                    <input asp-for="TotalBudget" aria-label="Total Budget" placeholder="Enter the total budget"
+                           class="mt-1 w-full rounded-md border border-gray-300 p-3 shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500" />
+                    <span asp-validation-for="TotalBudget" class="text-xs text-red-500"></span>
+                </div> *@
+
+                <!-- Description -->
+                <div class="lg:col-span-2">
+                    <label asp-for="Description" class="block text-sm font-medium text-gray-700">
+                        Description <span class="text-red-500">*</span>
+                    </label>
+                    <textarea asp-for="Description" rows="5" aria-label="Project Description" placeholder="Provide a detailed description of the project"
+                              class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 p-4 shadow-sm transition focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+                    <span asp-validation-for="Description" class="text-xs text-red-500"></span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mt-10 flex justify-center">
+                <button type="submit"
+                        class="w-full rounded-md bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-lg transition hover:bg-indigo-700 hover:shadow-xl focus:ring-4 focus:ring-indigo-500 sm:w-auto">
+                    Create Project
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

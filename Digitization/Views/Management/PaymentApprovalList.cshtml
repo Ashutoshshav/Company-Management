@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Digitization.ViewModel.PaymentApprovalViewModel>
+
+@{
+    ViewData["Title"] = "PaymentApprovalList";
+}
+
+<div class="mx-auto rounded-lg bg-white py-5">
+    <div class="m-auto max-h-[555px] max-w-6xl overflow-y-auto rounded-lg">
+        <table class="min-w-full bg-white text-xs">
+            <thead class="sticky top-0 bg-[#2582b0] text-xs uppercase text-white shadow">
+                <tr>
+                    <th class="px-3 py-2 text-center">Record ID</th>
+                    <th class="px-3 py-2 text-center">Project ID</th>
+                    <th class="px-3 py-2 text-center">Emp ID</th>
+                    <th class="px-3 py-2 text-center">Expense Type</th>
+                    <th class="px-3 py-2 text-left">Amount</th>
+                    <th class="px-3 py-2 text-center">Expense Date</th>
+                    <th class="px-3 py-2 text-center">Status</th>
+                    <th class="px-3 py-2 text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 text-sm">
+                @{
+                    var recordID = 1;
+                }
+                @foreach (var item in Model)
+                {
+                    <tr class="transition odd:bg-gray-50 hover:bg-gray-100">
+                        <td class="px-3 py-1 text-center">@(recordID++)</td>
+                        <td class="px-3 py-1 text-center">@Html.DisplayFor(modelItem => item.ProjectID)</td>
+                        <td class="px-3 py-1 text-center">@Html.DisplayFor(modelItem => item.EmployeeID)</td>
+                        <td class="truncate px-3 py-1 text-center">
+                            <span title="@item.ExpenseType">@Html.DisplayFor(modelItem => item.ExpenseType)</span>
+                        </td>
+                        <td class="px-3 py-1 font-semibold text-green-600">₹@Html.DisplayFor(modelItem => item.Amount)</td>
+                        <td class="px-3 py-1 text-center text-gray-800">
+                            @(item.ExpenseDate.HasValue ? item.ExpenseDate.Value.ToString("dd MMM yyyy hh:mm tt") : "N/A")
+                        </td>
+                        <td class="px-3 py-1 text-center">
+                            @if (item.ApprovalStatus == "Approved")
+                            {
+                                <span class="font-semibold text-green-500">Approved</span>
+                            }
+                            else if (item.ApprovalStatus == "Rejected")
+                            {
+                                <span class="font-semibold text-red-500">Rejected</span>
+                            }
+                            else
+                            {
+                                <span class="font-semibold text-gray-500">Waiting</span>
+                            }
+                        </td>
+                        <td class="px-3 py-1 text-center">
+                            <a asp-action="Details" asp-route-RecordID="@item.RecordID" asp-route-expenseType="@item.ExpenseType"
+                               class="inline-flex items-center justify-center p-1 text-gray-600 transition hover:text-blue-500">
+                                <i class="fas fa-info-circle"></i>
+                                Detail
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

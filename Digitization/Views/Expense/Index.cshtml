@@ -1,0 +1,246 @@
+﻿@model Digitization.Models.ProjectMaterialExpenses
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<div class="mx-auto">
+	<!-- CREATE MATERIAL EXPENSE FORM -->
+	<div class="p-4 lg:px-16">
+		<!-- Success/Error Messages -->
+		@if (TempData["SuccessMessage"] != null)
+		{
+			<div class="mt-4 rounded-md bg-green-100 p-4 text-sm font-medium text-green-800 shadow-lg transition-all">
+				@TempData["SuccessMessage"]
+			</div>
+		}
+		else if (TempData["ErrorMessage"] != null)
+		{
+			<div class="mt-4 rounded-md bg-red-100 p-4 text-sm font-medium text-red-800 shadow-lg transition-all">
+				@TempData["ErrorMessage"]
+			</div>
+		}
+
+		<!-- Form -->
+		<form asp-controller="Expense" asp-action="CreateMaterialExpense" class="">
+			@* <h2 class="text-3xl font-semibold text-gray-700">Material Cost</h2> *@
+			<!-- Validation Summary -->
+			<div asp-validation-summary="ModelOnly" class="text-sm text-red-500"></div>
+
+			<!-- Form Grid -->
+			<div class="grid-cols-1 grid items-center justify-end gap-1 sm:grid-cols-5 lg:px-10 xl:grid-cols-5">
+				<!-- Project ID Field (Hidden) -->
+				<div class="hidden">
+					<label asp-for="ProjectID" class="mb-1 block text-sm font-medium text-gray-700">Project ID</label>
+					<input id="ProjectID" asp-for="ProjectID" placeholder="Enter Project ID" class="form-input w-full rounded-md border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500" />
+					<span asp-validation-for="ProjectID" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Project Name Field (Hidden) -->
+				<div class="hidden">
+					<label asp-for="ProjectName" class="mb-1 block text-sm font-medium text-gray-700">Project Name</label>
+					<input id="ProjectName" asp-for="ProjectName" placeholder="Enter Project Name" class="form-input w-full rounded-md border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500" />
+				</div>
+
+				<!-- Select Project -->
+				<div class="flex-1">
+					@* <label for="projectDropdown" class="block text-sm font-medium text-gray-700">Project Name</label> *@
+					<select id="projectDropdown" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500">
+						<option value="" disabled selected>Project Name</option>
+					</select>
+					<span asp-validation-for="ProjectName" class="text-xs text-red-500"></span>
+					<span asp-validation-for="ProjectID" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Expense Description -->
+				<div class="flex-1">
+					@* <label asp-for="Description" class="block text-sm font-medium text-gray-700">Description</label> *@
+					<input asp-for="Description" placeholder="Enter description" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500"></input>
+					<span asp-validation-for="Description" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Material Cost -->
+				<div class="flex-1">
+					@* <label asp-for="MaterialCost" class="block text-sm font-medium text-gray-700">Amount</label> *@
+					<input asp-for="MaterialCost" placeholder="Enter Amount" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500" />
+					<span asp-validation-for="MaterialCost" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Remark -->
+				<div class="flex-1">
+					@* <label asp-for="Remark" class="block text-sm font-medium text-gray-700">Remark</label> *@
+					<textarea asp-for="Remark" rows="1" placeholder="Add a remark(Optional)" class="block w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500"></textarea>
+					<span asp-validation-for="Remark" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Action Button -->
+				<button type="submit" class="col-auto flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-3 text-center text-sm font-semibold text-white shadow-md transition-all duration-300 ease-in-out hover:from-blue-600 hover:to-blue-800 focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50">
+					<span class="flex items-center gap-2">
+						<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+						</svg>
+						Submit
+					</span>
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<!-- LIST OF MATERIAL EXPENSES -->
+	<div class="min-h-[510px] rounded-b-lg py-0 shadow-xl lg:px-8">
+		<hr />
+		@* <h2 class="flex items-center gap-2 text-3xl font-semibold text-gray-800">
+                <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h11M9 21V3M21 16h-8m4 5V11"></path>
+                </svg>
+                Material Expenses List
+            </h2> *@
+
+		<!-- Expenses Table -->
+		<div class="m-auto mt-4 max-w-6xl overflow-x-auto">
+			<table class="min-w-full table-auto overflow-hidden rounded-lg border border-gray-300 shadow-sm">
+				<thead class="customBlue2 bg-[#2582b0] text-xs uppercase text-white">
+					<tr>
+						<th class="px-3 py-2 text-center">Record ID</th>
+						<th class="px-3 py-2 text-left">Project Name</th>
+						<th class="px-3 py-2 text-left">Amount</th>
+						<th class="px-3 py-2 text-left">Entry Date/Time</th>
+						<th class="px-3 py-2 text-left">Description</th>
+						<th class="px-3 py-2 text-left">Actions</th>
+					</tr>
+				</thead>
+				<tbody id="expenseTable" class="divide-y divide-gray-200 text-sm">
+					<!-- Example Row -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
+
+@* <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/Home/GetProjectData')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                let dropdownMenu = this.getElementById("projectDropdown");
+                data.forEach(item => {
+                    let option = document.createElement("option");
+                    option.value = item.projectId;
+                    option.textContent = item.projectName;
+
+
+                    dropdownMenu.appendChild(option);
+                });
+            });
+
+            let projectDropdown = this.getElementById("projectDropdown");
+
+            projectDropdown.addEventListener('change', (event) => {
+                // Get the selected ProjectId and ProjectName
+                let ProjectID = document.getElementById("ProjectID");
+                ProjectID.value = event.target.value;  // Get the selected value
+
+                let ProjectName = document.getElementById("ProjectName");
+                ProjectName.value = event.target.options[event.target.selectedIndex].text;  // Get the selected text
+            });
+    });
+</script> *@
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		// Fetch projects and populate dropdown
+		fetch("/Home/GetProjectData")
+			.then(response => response.json())
+			.then(data => {
+				let dropdownMenu = document.getElementById("projectDropdown");
+				data.forEach(item => {
+					let option = document.createElement("option");
+					option.value = item.projectId;
+					option.textContent = item.projectName;
+					dropdownMenu.appendChild(option);
+				});
+			});
+
+			let projectDropdown = this.getElementById("projectDropdown");
+
+			projectDropdown.addEventListener('change', (event) => {
+				// Get the selected ProjectId and ProjectName
+				let ProjectID = document.getElementById("ProjectID");
+				ProjectID.value = event.target.value;  // Get the selected value
+
+				let ProjectName = document.getElementById("ProjectName");
+				ProjectName.value = event.target.options[event.target.selectedIndex].text;  // Get the selected text
+			});
+		// Fetch expenses and populate table
+		fetch("/Expense/AllMaterialExpenses")
+			.then(response => response.json())
+			.then(data => {
+				console.log(data)
+				let tableBody = document.getElementById("expenseTable");
+				let recordID = 1;
+				data.forEach(item => {
+					const date = new Date(item.entryDTime);
+
+					const formattedDate = new Intl.DateTimeFormat('en-GB', {
+					  day: '2-digit',
+					  month: 'short',
+					  year: 'numeric',
+					  hour: '2-digit',
+					  minute: '2-digit',
+					}).format(date);
+
+					let row = document.createElement("tr");
+					row.classList.add('transition', 'odd:bg-gray-50', 'hover:bg-gray-100');
+					row.innerHTML = `
+						<td class="px-3 py-2 text-center">${recordID++}</td>
+						<td class="px-3 py-1">${item.projectName}</td>
+						<td class="px-3 py-1 font-semibold text-green-600">₹${item.materialCost}</td>
+						<td class="px-3 py-1">${formattedDate}</td>
+						<td class="px-3 py-1">${item.description}</td>
+						<td class="px-3 py-1">
+							<button class="flex items-center justify-center text-red-500 transition hover:text-red-700" onclick="deleteExpense(${item.recordID})">
+								<svg class="flex h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+								</svg>
+								Delete
+							</button>
+						</td>
+					`;
+					tableBody.appendChild(row);
+				});
+			});
+
+		// Search function
+		// document.getElementById("search").addEventListener("input", function () {
+		//     let query = this.value.toLowerCase();
+		//     document.querySelectorAll("#expenseTable tr").forEach(row => {
+		//         row.style.display = row.textContent.toLowerCase().includes(query) ? "" : "none";
+		//     });
+		// });
+	});
+
+		function deleteExpense(recordID) {
+		if (confirm("Are you sure you want to delete this expense?")) {
+			console.log(recordID);  // Log the recordID to confirm it is correct
+			fetch(`/Expense/DeleteMaterialExpense/${recordID}`, { method: "DELETE" })
+				.then(response => response.json()) // Parse JSON response
+				.then(data => {
+					if (data.success) {
+						location.reload();  // Reload the page on success
+					} else {
+						alert(data.message);  // Show error message
+					}
+				})
+				.catch(error => {
+					console.error("Error:", error);
+				});
+		}
+	}
+</script>

@@ -1,0 +1,294 @@
+﻿@model IEnumerable<Digitization.ViewModel.EmployeeExpenseViewModel>
+
+@{
+    ViewData["Title"] = "EmployeesExpenseList";
+}
+
+<div class="mx-auto max-w-5xl rounded-lg bg-white p-5 shadow-lg">
+    @* <h1 class="mb-4 text-center text-2xl font-bold text-gray-700">Employees Expense List</h1> *@
+    <div class="max-h-[555px] overflow-y-auto rounded-lg border border-gray-300">
+        <table class="w-full text-sm text-gray-700">
+            <thead class="sticky top-0 bg-[#2582b0] text-xs uppercase text-white shadow">
+                <tr>
+                    <th class="px-4 py-2 text-center">Employee ID</th>
+                    <th class="px-4 py-2 text-left">Employee Name</th>
+                    <th class="px-4 py-2 text-left">Total Expense</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                @foreach (var item in Model)
+                {
+                    <tr class="transition odd:bg-gray-50 hover:bg-gray-100">
+                        <td class="px-4 py-2 text-center font-medium">@item.EmployeeID</td>
+                        <td class="px-4 py-2">@item.EmployeeName</td>
+                        <td class="px-4 py-2 text-right font-semibold text-green-600 hover:text-green-700">
+                            <button type="button"
+                                    class="expense-toggle flex items-center space-x-2 rounded bg-gray-200 px-3 py-1 transition hover:bg-gray-300"
+                                    data-employee-id="@item.EmployeeID"
+                                    data-total-expense="@item.TotalExpense">
+                                <span>₹@item.TotalExpense</span>
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div id="expenseModal" class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black bg-opacity-50 p-4 sm:p-6">
+        <div class="w-full max-w-lg rounded-lg bg-white p-5 shadow-lg sm:p-6">
+            <h2 class="mb-4 text-lg font-bold text-gray-800 sm:text-xl">
+                <span id="employeeName"></span>
+            </h2>
+
+            <!-- Expense Table -->
+            <div id="expenseDetails" class="overflow-x-auto rounded-lg border border-gray-300">
+                <table class="w-full border-collapse text-sm">
+                    <thead class="bg-gray-200 text-xs uppercase sm:text-sm">
+                        <tr>
+                            <th class="border px-3 py-2 text-center">Date</th>
+                            <th class="border px-3 py-2 text-center">Expense Type</th>
+                            <th class="border px-3 py-2 text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="expenseTableBody" class="divide-y divide-gray-300">
+                        <!-- Dynamic Expense Data -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Approval Form -->
+            <form id="approvalForm" method="post" class="mt-4">
+                <input type="hidden" id="employeeIdInput" name="EmployeeID" />
+                <div class="grid-cols-1 grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Total Amount:</label>
+                        <input id="totalAmount" type="text" class="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-700 sm:text-base" readonly />
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" class="rounded-md bg-blue-600 px-5 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-blue-700 sm:text-base">
+                            Approve Payment
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Close Button -->
+            <button id="closeModal" class="mt-4 w-full rounded-md bg-red-500 px-4 py-2 text-sm font-semibold text-white transition duration-200 hover:bg-red-600 sm:text-base">
+                Close
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("expenseModal");
+        const closeModalButton = document.getElementById("closeModal");
+        const expenseTableBody = document.getElementById("expenseTableBody");
+        const totalAmountInput = document.getElementById("totalAmount");
+        const employeeIdInput = document.getElementById("employeeIdInput");
+        const approvalForm = document.getElementById("approvalForm");
+        const employeeName = document.getElementById("employeeName");
+
+        document.querySelectorAll(".expense-toggle").forEach(button => {
+            button.addEventListener("click", async function () {
+                const employeeID = this.dataset.employeeId;
+                const totalExpense = this.dataset.totalExpense;
+                const apiUrl = `/Management/EmployeeExpenseDetails?EmployeeID=${employeeID}`;
+
+                try {
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) throw new Error("Failed to fetch expenses.");
+                    const expensesData = await response.json();
+
+                    // Clear previous data
+                    console.log(expensesData);
+                    expenseTableBody.innerHTML = "";
+
+                    expensesData.paymentApprovalViewModel.forEach(expense => {
+                        const date = new Date(expense.expenseDate);
+                        const formattedDate = new Intl.DateTimeFormat('en-GB', {
+                            day: '2-digit',
+                            month: 'short',
+                            year: 'numeric',
+                        }).format(date);
+
+                        const row = `
+                            <tr class="border-b">
+                                <td class="px-3 py-1 text-center">${formattedDate}</td>
+                                <td class="px-3 py-1 text-center">${expense.expenseType}</td>
+                                <td class="px-3 py-1 text-right text-red-500">₹${expense.amount}</td>
+                            </tr>
+                        `;
+                        expenseTableBody.insertAdjacentHTML("beforeend", row);
+                    });
+
+                    // Set total amount and employee ID for approval form
+                    totalAmountInput.value = `₹${totalExpense}`;
+                    employeeName.textContent = `${expensesData.employeeName}(${expensesData.employeeID})`
+                    employeeIdInput.value = employeeID;
+
+                    // Show the modal
+                    modal.classList.remove("hidden");
+
+                } catch (error) {
+                    alert("Error fetching expenses. Please try again.");
+                    console.error(error);
+                }
+            });
+        });
+
+        // Close modal when clicking the close button
+        closeModalButton.addEventListener("click", () => {
+            modal.classList.add("hidden");
+        });
+
+        // Handle form submission for approval
+        approvalForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const formData = new FormData(this);
+            const employeeID = formData.get("EmployeeID");
+
+            try {
+                const response = await fetch(`/Management/UpdateApproval?EmployeeID=${employeeID}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" }
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("Expense approved successfully!");
+                    modal.classList.add("hidden"); // Close modal on success
+                } else {
+                    alert(result.message || "Error approving expense");
+                }
+            } catch (error) {
+                alert("An error occurred. Please try again.");
+            }
+        });
+    });
+
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     document.querySelectorAll(".expense-toggle").forEach(button => {
+    //         button.addEventListener("click", async function () {
+    //             const employeeID = this.dataset.employeeId;
+    //             const totalExpense = this.dataset.totalExpense;
+    //             const apiUrl = `/Management/EmployeeExpenseDetails?EmployeeID=${employeeID}`; // Update with your actual API URL
+    //             const currentRow = this.closest("tr");
+    //             const existingRow = document.querySelector(".expense-details-row");
+
+    //             // Remove any existing expanded row
+    //             if (existingRow) existingRow.remove();
+
+    //             try {
+    //                 // Fetch data from the API
+    //                 const response = await fetch(apiUrl);
+    //                 if (!response.ok) throw new Error("Failed to fetch expenses.");
+    //                 const expensesData = await response.json();
+    //                 console.log(expensesData);
+    //                 // Create a new row for details
+    //                 const detailsRow = document.createElement("tr");
+    //                 detailsRow.classList.add("expense-details-row", "bg-gray-100");
+    //                 detailsRow.dataset.employeeId = employeeID;
+
+    //                 // Build expense details table
+    //                 let expenseTableRows = "";
+    //                 expensesData.paymentApprovalViewModel.forEach(expense => {
+    //                         const date = new Date(expense.expenseDate);
+    //                         const formattedDate = new Intl.DateTimeFormat('en-GB', {
+    //                           day: '2-digit',
+    //                           month: 'short',
+    //                           year: 'numeric',
+    //                         }).format(date);
+    //                     expenseTableRows += `
+    //                         <tr class="border-b">
+    //                             <td class="px-3 py-1 text-center">${formattedDate}</td>
+    //                             <td class="px-3 py-1 text-center">${expense.expenseType}</td>
+    //                             <td class="px-3 py-1 text-right text-red-500">₹${expense.amount}</td>
+    //                         </tr>
+    //                     `;
+    //                 });
+
+    //                 detailsRow.innerHTML = `
+    //                      <td colspan="4" class="p-3">
+    //                         <div class="mb-2 overflow-x-auto rounded-lg border border-gray-300">
+    //                             <table class="min-w-full border-collapse text-sm">
+    //                                 <thead class="bg-gray-200 text-xs uppercase">
+    //                                     <tr>
+    //                                         <th class="border px-3 py-2 text-center">Date</th>
+    //                                         <th class="border px-3 py-2 text-center">Expense Type</th>
+    //                                         <th class="border px-3 py-2 text-right">Amount</th>
+    //                                     </tr>
+    //                                 </thead>
+    //                                 <tbody class="divide-y divide-gray-300">
+    //                                     ${expenseTableRows}
+    //                                 </tbody>
+    //                             </table>
+    //                         </div>
+
+    //                         <!-- Approval Message Box -->
+    //                         <div class="message-container border-l-4 mt-2 hidden rounded-md border-green-500 bg-green-100 p-2 text-center text-green-700"></div>
+
+    //                         <!-- Approval Form -->
+    //                         <form method="post" class="approval-form" action="/Management/UpdateApproval?EmployeeID=${employeeID}">
+    //                             <div class="message-container"></div>
+    //                             <input type="hidden" name="EmployeeID" value="${employeeID}" />
+
+    //                             <div class="grid-cols-2 grid items-center gap-4">
+    //                                 <div>
+    //                                     <label class="block text-sm font-medium">Total Amount:</label>
+    //                                     <input type="text" class="w-full rounded-md border border-gray-300 bg-gray-100 px-3 py-2 text-gray-700" value="₹${totalExpense}" readonly />
+    //                                 </div>
+    //                                 <div class="text-right">
+    //                                     <button type="submit" class="rounded-md bg-blue-600 px-5 py-2 font-semibold text-white transition duration-200 hover:bg-blue-700">
+    //                                         Approve Payment
+    //                                     </button>
+    //                                 </div>
+    //                             </div>
+    //                         </form>
+    //                     </td>
+    //                 `;
+
+    //                 // Insert the new row after the clicked row
+    //                 currentRow.parentNode.insertBefore(detailsRow, currentRow.nextSibling);
+
+    //                 document.querySelectorAll("form.approval-form").forEach(form => {
+    //                     form.addEventListener("submit", async function (event) {
+    //                         event.preventDefault(); // Prevent default form submission
+
+    //                         const formData = new FormData(this);
+    //                         const employeeID = formData.get("EmployeeID");
+    //                         const messageContainer = this.querySelector(".message-container");
+    //                         try {
+    //                             const response = await fetch(`/Management/UpdateApproval?EmployeeID=${employeeID}`, {
+    //                                 method: "POST",
+    //                                 headers: { "Content-Type": "application/json" }
+    //                             });
+
+    //                             const result = await response.json();
+
+    //                             if (response.ok) {
+    //                                 console.log(result.message);
+    //                                 messageContainer.innerHTML = `<p class="text-sm font-semibold text-green-600">${result.message}</p>`;
+    //                                 messageContainer.classList.remove("hidden");
+    //                             } else {
+    //                                 messageContainer.innerHTML = `<p class="text-sm font-semibold text-red-600">${result.message || "Error approving expense"}</p>`;
+    //                                 messageContainer.classList.remove("hidden");
+    //                             }
+    //                         } catch (error) {
+    //                             messageContainer.innerHTML = `<p class="text-sm font-semibold text-red-600">An error occurred. Please try again.</p>`;
+    //                             messageContainer.classList.remove("hidden");
+    //                         }
+    //                     });
+    //                 });
+    //             } catch (error) {
+    //                 alert("Error fetching expenses. Please try again.");
+    //                 console.error(error);
+    //             }
+    //         });
+    //     });
+    // });
+</script>

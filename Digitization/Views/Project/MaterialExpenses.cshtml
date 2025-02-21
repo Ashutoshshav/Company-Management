@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Digitization.Models.ProjectMaterialExpenses>
+
+@{
+    ViewData["Title"] = "MaterialExpenses";
+}
+
+<div class="min-h-screen bg-gray-50 p-4 sm:p-6 lg:p-8">
+    <div class="mx-auto max-w-7xl rounded-lg bg-white p-6 shadow-lg">
+        <h1 class="mb-4 text-2xl font-bold text-gray-800">Material Expenses</h1>
+
+        <!-- Create New Button -->
+        <div class="mb-6 text-right">
+            <a asp-action="Create"
+               class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                Create New
+            </a>
+        </div>
+
+        <!-- Responsive Table -->
+        <div class="overflow-x-auto">
+            <table class="w-full table-auto border-collapse text-left text-sm">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="border-b px-4 py-2 font-medium text-gray-700">@Html.DisplayNameFor(model => model.ProjectID)</th>
+                        <th class="border-b px-4 py-2 font-medium text-gray-700">@Html.DisplayNameFor(model => model.ProjectName)</th>
+                        <th class="border-b px-4 py-2 font-medium text-gray-700">@Html.DisplayNameFor(model => model.Ref)</th>
+                        <th class="border-b px-4 py-2 font-medium text-gray-700">@Html.DisplayNameFor(model => model.Remark)</th>
+                        <th class="border-b px-4 py-2 font-medium text-gray-700">@Html.DisplayNameFor(model => model.Description)</th>
+                        <th class="border-b px-4 py-2 font-medium text-gray-700">@Html.DisplayNameFor(model => model.MaterialCost)</th>
+                        <th class="border-b px-4 py-2 font-medium text-gray-700">@Html.DisplayNameFor(model => model.EntryDTime)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr class="even:bg-gray-50 hover:bg-gray-100">
+                            <td class="border-b px-4 py-2 text-gray-700">@Html.DisplayFor(modelItem => item.ProjectID)</td>
+                            <td class="border-b px-4 py-2 text-gray-700">@Html.DisplayFor(modelItem => item.ProjectName)</td>
+                            <td class="border-b px-4 py-2 text-gray-700">@Html.DisplayFor(modelItem => item.Ref)</td>
+                            <td class="border-b px-4 py-2 text-gray-700">@Html.DisplayFor(modelItem => item.Remark)</td>
+                            <td class="border-b px-4 py-2 text-gray-700">@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td class="border-b px-4 py-2 text-gray-700">@Html.DisplayFor(modelItem => item.MaterialCost)</td>
+                            <td class="border-b px-4 py-2 text-gray-700">@Html.DisplayFor(modelItem => item.EntryDTime)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

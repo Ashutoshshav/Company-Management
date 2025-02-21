@@ -1,0 +1,108 @@
+﻿@model Digitization.Models.SiteExpenses
+
+@{
+    ViewData["Title"] = "SiteExpense";
+}
+
+<div class="container mx-auto my-10 px-4">
+
+    <div class="mt-10 flex justify-center">
+        <!-- Form Card -->
+        <div class="w-full max-w-2xl rounded-lg bg-gradient-to-r from-white p-8 shadow-lg">
+            <h2 class="mb-6 text-2xl font-semibold text-gray-700">Create Site Expense</h2>
+
+            <form asp-action="SiteExpense" class="space-y-6">
+                <!-- Validation Summary -->
+                <div asp-validation-summary="ModelOnly" class="text-sm font-medium text-red-500"></div>
+
+                <div class="mb-4 hidden">
+                    <label asp-for="ProjectId" class="block text-sm font-medium text-gray-700">Project ID</label>
+                    <input id="ProjectId" asp-for="ProjectId" class="form-input mt-1 block w-full rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+                    <span asp-validation-for="ProjectId" class="text-sm text-red-500"></span>
+                </div>
+                <!-- Project Dropdown -->
+                <div>
+                    <label for="projectDropdown" class="block text-sm font-medium text-gray-700">Select Project</label>
+                    <select id="projectDropdown"
+                            class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+                        <option value="" disabled selected>Select Project</option>
+                        <!-- Options dynamically added -->
+                    </select>
+                    <span asp-validation-for="ProjectId" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Site Location -->
+                <div>
+                    <label asp-for="SiteLocation" class="block text-sm font-medium text-gray-700">Site Location</label>
+                    <input asp-for="SiteLocation"
+                           class="form-input mt-1 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                    <span asp-validation-for="SiteLocation" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Expense Type -->
+                <div>
+                    <label asp-for="ExpenseType" class="block text-sm font-medium text-gray-700">Expense Type</label>
+                    <input asp-for="ExpenseType"
+                           class="form-input mt-1 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                    <span asp-validation-for="ExpenseType" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Expense Amount -->
+                <div>
+                    <label asp-for="SiteAmount" class="block text-sm font-medium text-gray-700">Expense Amount</label>
+                    <input asp-for="SiteAmount" type="number"
+                           class="form-input mt-1 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+                    <span asp-validation-for="SiteAmount" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Expense Description -->
+                <div>
+                    <label asp-for="ExpenseDescription" class="block text-sm font-medium text-gray-700">Expense Description</label>
+                    <textarea asp-for="ExpenseDescription" rows="4"
+                              class="form-textarea mt-1 block w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"></textarea>
+                    <span asp-validation-for="ExpenseDescription" class="text-xs text-red-500"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit"
+                            class="customBlue customBlue2Hover w-full rounded-md px-6 py-3 text-lg font-medium text-white shadow-lg transition duration-300 focus:outline-none focus:ring-4 focus:ring-indigo-500">
+                        Create Expense
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/Home/GetProjectData')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                let dropdownMenu = this.getElementById("projectDropdown");
+                data.forEach(item => {
+                    let option = document.createElement("option");
+                    option.value = item.projectId;
+                    option.textContent = item.projectName;
+
+                    dropdownMenu.appendChild(option);
+                });
+            });
+
+            let projectDropdown = this.getElementById("projectDropdown");
+
+            projectDropdown.addEventListener('change', (event) => {
+                // Get the selected ProjectId and ProjectName
+                let ProjectId = document.getElementById("ProjectId");
+                ProjectId.value = event.target.value;  // Get the selected value
+            });
+    });
+</script>

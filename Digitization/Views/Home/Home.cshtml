@@ -1,0 +1,105 @@
+﻿@{
+    var pieChartData = Json.Serialize(Model.totalPresentCount);
+    var pieChartLabels = Json.Serialize(Model.totalAbsentCount);
+    var pieChartPercentages = Json.Serialize(Model.chartData);
+}
+
+<!-- Include Highcharts library -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+<!-- Container for the chart -->
+<div id="container" style="min-width: 310px; height: 300px; max-width: 600px; margin: 0 auto"></div>
+
+<!-- Placeholder for the image -->
+<div id="chartImageContainer" style="display: none;">
+    <img id="chartImage" src="" alt="Pie Chart Image">
+</div>
+
+<script>
+
+    // Parse the data from the server
+    var pieChartData = @Html.Raw(pieChartData);
+    var pieChartLabels = @Html.Raw(pieChartLabels);
+
+    console.log(@Html.Raw(pieChartData))
+    // console.log(pieChartLabels)
+
+    // // Ensure data consistency before rendering
+    // if (!Array.isArray(pieChartData) || !Array.isArray(pieChartLabels) || pieChartData.length !== pieChartLabels.length) {
+    //     console.error("Data mismatch! Ensure labels and data arrays have the same length.");
+    // } else {
+    //     var chartData = pieChartLabels.map((label, index) => {
+    //         return {
+    //             name: label,
+    //             y: pieChartData[index]
+    //         };
+    //     }).filter(item => item.y > 0);  // 🔥 Filters out items where y = 0
+
+    //     console.log("Filtered Chart Data:", chartData);
+
+    //     // Create the Highcharts pie chart
+    //     Highcharts.chart('container', {
+    //         chart: {
+    //             type: 'pie',
+    //             backgroundColor: '#f8f9fa',
+    //             borderRadius: 5,
+    //             shadow: true
+    //         },
+    //         title: {
+    //             text: "Today'a Presence",
+    //             align: 'center',
+    //             style: {
+    //                 fontSize: '16px',
+    //                 fontWeight: 'bold',
+    //                 color: '#333'
+    //             }
+    //         },
+    //         tooltip: {
+    //             pointFormat: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)',
+    //             backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    //             style: {
+    //                 color: '#fff'
+    //             },
+    //         },
+    //         legend: {
+    //             layout: 'horizontal',
+    //             align: 'center',
+    //             verticalAlign: 'top',
+    //             itemStyle: {
+    //                 fontSize: '13px',
+    //                 fontWeight: 'bold',
+    //                 color: '#333'
+    //             }
+    //         },
+    //         plotOptions: {
+    //             pie: {
+    //                 allowPointSelect: true,
+    //                 cursor: 'pointer',
+    //                 borderWidth: 2,
+    //                 borderColor: '#fff',
+    //                 dataLabels: {
+    //                     enabled: true,
+    //                     format: '<b>{point.name}</b>: {point.y} ({point.percentage:.1f}%)',
+    //                     style: {
+    //                         fontSize: '14px',
+    //                         fontWeight: 'bold',
+    //                         color: '#000'
+    //                     }
+    //                 },
+    //                 showInLegend: true
+    //             }
+    //         },
+    //         series: [{
+    //             name: 'Customers',
+    //             colorByPoint: true,
+    //             data: chartData
+    //         }],
+    //         exporting: {
+    //             enabled: true
+    //         }
+    //     });
+    // }
+</script>

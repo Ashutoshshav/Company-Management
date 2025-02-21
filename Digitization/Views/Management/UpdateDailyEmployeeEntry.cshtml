@@ -1,0 +1,388 @@
+﻿@model List<Digitization.Models.DailyEmployeeEntry>
+
+@{
+	ViewData["Title"] = "UpdateDailyEmployeeEntry";
+}
+
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+@* <h1 class="mb-4 text-center text-2xl font-bold">Update Daily Employee Entry</h1> *@
+
+<div class="m-auto max-w-7xl space-y-3 sm:px-2">
+	<div class="mt-5 rounded-lg bg-white p-2 px-6">
+
+		@if (TempData["SuccessMessage"] != null)
+		{
+			<div class="alert alert-success border-l-4 mb-4 border-green-500 bg-green-100 p-3 text-green-700">
+				@TempData["SuccessMessage"]
+			</div>
+		}
+		@if (TempData["ErrorMessage"] != null)
+		{
+			<div class="alert alert-success border-l-4 mb-4 border-red-500 bg-red-100 p-3 text-red-700">
+				@TempData["ErrorMessage"]
+			</div>
+		}
+
+		<form asp-controller="Management" asp-action="EnterEmployeeEntry" class="mx-auto rounded-lg bg-white">
+			<div class="grid-cols-1 grid items-end justify-end gap-1 sm:grid-cols-5">
+				@* <h2 class="text-xl font-semibold text-gray-700">Employee's Attendance</h2> *@
+				<input type="hidden" id="EmployeeName" name="EmployeeName" />
+
+				<!-- Employee Name -->
+				<div class="flex flex-col">
+					@* <label for="EmployeeID" class="flex items-center gap-2 text-sm font-medium text-gray-600">
+						<i class="fa-regular fa-user font-semibold"></i>
+						Action
+					</label> *@
+					<select name="" id="ActionDropdown" class="mt-2 rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-gray-700 transition focus:ring-2 focus:ring-blue-500">
+						<option value="">Action</option>
+						<option value="In Entry">In Entry</option>
+						<option value="Out Entry">Out Entry</option>
+					</select>
+				</div>
+
+				<!-- Employee Name -->
+				<div class="flex flex-col">
+					@* <label for="EmployeeID" class="flex items-center gap-2 text-sm font-medium text-gray-600">
+						<i class="fa-regular fa-user font-semibold"></i>
+						Employee Name
+					</label> *@
+					<select name="EmployeeID" id="absentEmployeesDropdown" class="mt-2 rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-gray-700 transition focus:ring-2 focus:ring-blue-500">
+						<option value="">Employee Name</option>
+						<!-- Add employee options here -->
+					</select>
+				</div>
+
+				<!-- Time In -->
+				<div class="flex flex-col" id="timeInDiv">
+					@* <label for="TimeIn" class="flex items-center gap-2 text-sm font-medium text-gray-600">
+						<svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3"></path>
+							<circle cx="12" cy="12" r="9"></circle>
+						</svg>
+						Time
+					</label> *@
+					<input type="time" id="TimeIn" name="TimeIn" class="mt-2 rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-gray-700 transition focus:ring-2 focus:ring-blue-500" />
+				</div>
+
+				<!-- In Attendance Type -->
+				<div class="flex flex-col" id="InAttendanceTypes">
+					@* <label for="JobCategory" class="flex items-center gap-2 text-sm font-medium text-gray-600">
+						<i class="fa-solid fa-list text-yellow-500"></i>
+						Status Type
+					</label> *@
+					<select name="InEntryType" class="InEntryType mt-2 rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-gray-500 transition focus:ring-2 focus:ring-blue-500">
+						<option value="" class="customBlue text-gray-500" disabled selected>Status Type</option>
+						<!-- Add job category options here -->
+					</select>
+				</div>
+
+				<!-- Time Out -->
+				<div class="flex hidden flex-col" id="timeOutDiv">
+					@* <label for="TimeOut" class="flex items-center gap-2 text-sm font-medium text-gray-600">
+						<svg class="h-5 w-5 text-red-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3"></path>
+							<circle cx="12" cy="12" r="9"></circle>
+						</svg>
+						Time Out
+					</label> *@
+					<input type="time" id="TimeOut" name="TimeOut" class="mt-2 rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-gray-700 transition focus:ring-2 focus:ring-blue-500" />
+				</div>
+				
+				<!-- Out Attendance Type -->
+				<div class="flex hidden flex-col" id="OutAttendanceTypes">
+					@* <label for="JobCategory" class="flex items-center gap-2 text-sm font-medium text-gray-600">
+						<i class="fa-solid fa-list text-yellow-500"></i>
+						Status Type
+					</label> *@
+					<select name="OutEntryType" class="OutEntryType mt-2 rounded-md border border-gray-300 bg-gray-50 p-3 text-sm text-gray-500 transition focus:ring-2 focus:ring-blue-500">
+						<option value="" class="customBlue text-gray-500" disabled selected>Status Type</option>
+						<!-- Add job category options here -->
+					</select>
+				</div>
+
+				<button type="submit" class="flex w-full items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 p-3 text-center text-lg font-semibold text-white shadow-xl hover:from-blue-600 hover:to-blue-800 focus:ring-4 focus:ring-blue-500 focus:outline-none">
+					@* <svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+					</svg> *@
+					<p class="text-base">Submit</p>
+				</button>
+			</div>
+		</form>
+	</div>
+	<hr />
+	@* <h2 class="text-2xl font-semibold text-gray-700">Attendance Summary</h2> *@
+	@{
+		List<KeyValuePair<string, string>> EmployeeList = new List<KeyValuePair<string, string>>();
+		var RecoedID = 1;
+	}
+	@if (Model != null && Model.Any())
+	{
+		<div class="m-auto mt-2 max-h-[480px] max-w-5xl overflow-y-auto rounded-lg">
+			<table class="min-w-full bg-white text-xs">
+				<thead class="sticky top-0 bg-[#2582b0] text-xs uppercase text-white">
+					<tr>
+						<th class="px-3 py-2 text-center">Record ID</th>
+						<th class="px-3 py-2 text-left">Employee Name</th>
+						<th class="px-3 py-2 text-center">Status</th>
+						<th class="px-3 py-2 text-center">Start Time</th>
+						<th class="px-3 py-2 text-center">End Time</th>
+						@* <th class="p-1 text-center">Logged Status</th> *@
+						<th class="p-1 text-center">Entry Date/Time</th>
+						@* <th class="p-1 text-center">Working Duration</th> *@
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-gray-200 text-sm">
+					@foreach (var item in Model)
+					{
+						EmployeeList.Add(new KeyValuePair<string, string>(item.EmployeeID, item.EmployeeName));
+
+						<tr class="transition odd:bg-gray-50 hover:bg-gray-100">
+							<td class="px-3 py-2 text-center">@(RecoedID++)</td>
+							<td class="px-3 py-2 text-left">@Html.DisplayFor(modelItem => item.EmployeeName)</td>
+							<td class="px-3 py-2 text-center">@Html.DisplayFor(modelItem => item.InEntryType)</td>
+							<td class="px-3 py-2 text-center">@item.TimeIn?.ToString("HH:mm")</td>
+							<td class="px-3 py-2 text-center">@item.TimeOut?.ToString("HH:mm")</td>
+							@* <td class="p-0.5 text-center">@item.LoggedStatus</td> *@
+							<td class="px-3 py-2 text-center">@item.EntryDTime?.ToString("dd MMM yyyy HH:mm")</td>
+							@* <td class="p-0.5 text-center">@Html.DisplayFor(modelItem => item.WorkingDuration)</td> *@
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
+	else
+	{
+		<p>No Attendance found for Today</p>
+	}
+</div>
+
+<script>
+		let fetchAllAttendanceType = async () => {
+			try {
+				let response = await fetch('/Home/GetAllAttendanceType')
+
+				if (!response.ok) {
+					throw new Error('Failed to fetch job categories');
+				}
+
+				let data = response.json();
+				// const dropdowns = document.querySelectorAll('.jobCategory');
+				// dropdowns.forEach(selectElement => {
+				// 	// Clear existing options
+				// 	// selectElement.innerHTML = '';
+
+				// 	// Populate new options
+				// 	data.forEach(jobCategory => {
+				// 		const option = document.createElement('option');
+				// 		option.value = jobCategory.jobCategoryName;
+				// 		option.textContent = jobCategory.jobCategoryName;
+				// 		selectElement.appendChild(option);
+				// 	});
+				// });
+				console.log(data)
+				return data;
+			}
+			catch(error){
+				console.error('Error:', error);
+
+				return null;
+			};
+
+			return null;
+		};
+
+		const ActionDropdown = document.getElementById('ActionDropdown');
+		let ActionDropdownValue = ActionDropdown.value;
+
+		ActionDropdown.addEventListener('change', async () => {
+			if(ActionDropdown.value == 'In Entry') {
+				console.log(ActionDropdown.value)
+					await fetch('/Management/GetAllAbsentEmployees')
+					.then(response => {
+						if (!response.ok) {
+							throw new Error('Failed to fetch job categories');
+						}
+						return response.json();
+					})
+					.then(async (data) => {
+						console.log(data)
+						const dropdowns = document.querySelectorAll('#absentEmployeesDropdown');
+						dropdowns.forEach(selectElement => {
+							// Clear existing options
+							selectElement.innerHTML = '';
+
+							// Populate new options
+							data.forEach(employee => {
+								const option = document.createElement('option');
+								option.value = employee.employeeID;
+								option.textContent = employee.employeeName;
+								selectElement.appendChild(option);
+							});
+						});
+
+						let AllAttendanceType = await fetchAllAttendanceType();
+
+						let InAttendanceTypes = document.getElementById('InAttendanceTypes');
+						InAttendanceTypes.classList.remove('hidden');
+
+						let OutAttendanceTypes = document.getElementById('OutAttendanceTypes');
+						OutAttendanceTypes.classList.add('hidden');
+
+						let timeInDiv = document.getElementById('timeInDiv');
+						timeInDiv.classList.remove('hidden');
+
+						let timeOutDiv = document.getElementById('timeOutDiv');
+						timeOutDiv.classList.add('hidden');
+
+						// Dropdown of Status
+						const StatusTypedropdown = document.querySelectorAll('.InEntryType');
+						console.log(StatusTypedropdown);
+						StatusTypedropdown.forEach(selectElement => {
+							// Clear existing options
+							selectElement.innerHTML = '';
+
+							// ✅ Add the default option
+							// let defaultOption = document.createElement("option");
+							// defaultOption.text = "Select Attendance Type";
+							// defaultOption.value = ""; // Optional: Keep value empty
+							// defaultOption.disabled = true; // Make it unselectable
+							// defaultOption.selected = true; // Make it the default selection
+
+							// selectElement.appendChild(defaultOption);
+
+							// Populate new options
+							AllAttendanceType.forEach(AttendanceType => {
+								const option = document.createElement('option');
+								option.value = AttendanceType.inEntryText;
+								option.textContent = AttendanceType.inEntryText;
+								selectElement.appendChild(option);
+								// if (AttendanceType.jobCategoryType === 'In') { // Fixed the condition here
+								// }
+							});
+						});
+						document.getElementById('absentEmployeesDropdown').addEventListener('change', async (event) => {
+						const selectedOption = event.target.options[event.target.selectedIndex]; // Fix here
+						document.getElementById('EmployeeName').value = selectedOption.textContent;
+
+						console.log(selectedOption.textContent + " " + selectedOption.value);
+						console.log(ActionDropdownValue);
+						});
+					})
+					.catch(error => console.error('Error:', error));
+
+			} else if(ActionDropdown.value == 'Out Entry') {
+				let employeeList = @Html.Raw(Json.Serialize(EmployeeList));
+
+				const dropdowns = document.getElementById('absentEmployeesDropdown');
+				console.log(employeeList);
+				dropdowns.innerHTML = '';
+
+				// Store IDs that have already been added to prevent duplicates
+				let addedEmployeeIDs = new Set();
+
+				employeeList.forEach(employee => {
+					// Check if the EmployeeID is not already in the set
+					if (!addedEmployeeIDs.has(employee.key)) {
+						let option = document.createElement("option");
+						option.value = employee.key; // EmployeeID
+						option.textContent = employee.value; // EmployeeName
+						dropdowns.appendChild(option);
+
+						// Add the EmployeeID to the Set to avoid adding it again
+						addedEmployeeIDs.add(employee.key);
+					}
+				});
+
+				let AllAttendanceType = await fetchAllAttendanceType();
+
+				let InAttendanceTypes = document.getElementById('InAttendanceTypes');
+				InAttendanceTypes.classList.add('hidden');
+				
+				let OutAttendanceTypes = document.getElementById('OutAttendanceTypes');
+				OutAttendanceTypes.classList.remove('hidden');
+				
+				let timeInDiv = document.getElementById('timeInDiv');
+				timeInDiv.classList.add('hidden');
+				
+				let timeOutDiv = document.getElementById('timeOutDiv');
+				timeOutDiv.classList.remove('hidden');
+
+				document.getElementById('absentEmployeesDropdown').addEventListener('change', async (event) => {
+					const selectedOption = event.target.options[event.target.selectedIndex]; // Fix here
+					document.getElementById('EmployeeName').value = selectedOption.textContent;
+
+					console.log(selectedOption.textContent + " " + selectedOption.value);
+					console.log(ActionDropdownValue);
+
+						await fetch(`/Management/GetEmployeeInEntry?employeeID=${selectedOption.value}`)
+							.then(response => response.json())
+							.then((response) => {
+									// Dropdown of Status
+									const StatusTypedropdown = document.querySelectorAll('.OutEntryType');
+									console.log(StatusTypedropdown);
+									StatusTypedropdown.forEach(selectElement => {
+											// Clear existing options
+											selectElement.innerHTML = '';
+
+											const option = document.createElement('option');
+											option.value = response;
+											option.textContent = response;
+											selectElement.appendChild(option);
+
+											// Populate new options
+											// AllAttendanceType.forEach(AttendanceType => {
+											// 	const option = document.createElement('option');
+											// 	option.value = AttendanceType.outEntryText;
+											// 	option.textContent = AttendanceType.outEntryText;
+											// 	selectElement.appendChild(option);
+											// 	// if (jobCategory.jobCategoryType === 'Out') { // Fixed the condition here
+											// 	// }
+											// });
+									});
+									console.log(response)
+							})
+							.catch((error) => console.error("Error fetching data:", error));
+				});
+				// // Dropdown of Status
+				// const StatusTypedropdown = document.querySelectorAll('.OutEntryType');
+				// console.log(StatusTypedropdown);
+				// StatusTypedropdown.forEach(selectElement => {
+				// 	// Clear existing options
+				// 	selectElement.innerHTML = '';
+
+				// 	// Populate new options
+				// 	AllAttendanceType.forEach(AttendanceType => {
+				// 			const option = document.createElement('option');
+				// 			option.value = AttendanceType.outEntryText;
+				// 			option.textContent = AttendanceType.outEntryText;
+				// 			selectElement.appendChild(option);
+				// 		// if (jobCategory.jobCategoryType === 'Out') { // Fixed the condition here
+				// 		// }
+				// 	});
+				// });
+			}
+		})
+
+		document.getElementById('absentEmployeesDropdown').addEventListener('change', async (event) => {
+					const selectedOption = event.target.options[event.target.selectedIndex]; // Fix here
+					document.getElementById('EmployeeName').value = selectedOption.textContent;
+
+					console.log(selectedOption.textContent + " " + selectedOption.value);
+					console.log(ActionDropdownValue);
+		});
+		// console.log(ActionDropdownValue);
+
+	// document.addEventListener("DOMContentLoaded", function () {
+	//   const timeInput = document.getElementById("TimeIn");
+	//   const now = new Date();
+
+	//   // Format hours and minutes as HH:MM
+	//   const hours = String(now.getHours()).padStart(2, "0");
+	//   const minutes = String(now.getMinutes()).padStart(2, "0");
+
+	//   timeInput.value = `${hours}:${minutes}`;
+	// });
+</script>

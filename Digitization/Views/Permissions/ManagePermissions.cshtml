@@ -1,0 +1,94 @@
+﻿@model List<Digitization.ViewModel.UserPermissionViewModel>
+
+@{
+	ViewData["Title"] = "Manage User Permissions";
+}
+
+<form asp-action="UpdatePermissions" method="post" class="rounded-xl bg-white p-4 shadow-lg" id="permissionsForm">
+	<div class="overflow-x-auto">
+		<table class="w-full border-collapse border border-gray-300 shadow-md">
+			<thead>
+				<tr class="bg-[#2582b0] text-sm uppercase tracking-wide text-white">
+					<th class="z-10 sticky left-0 border bg-[#2582b0] px-3 py-2 text-left">
+						Users/Permissions
+					</th>
+					@if (Model.Any())
+					{
+						foreach (var permission in Model.First().Permissions.Keys)
+						{
+							<th class="whitespace-normal break-words border px-6 py-1 text-center">
+								@Model.First().Permissions[permission].Description
+							</th>
+						}
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for (int i = 0; i < Model.Count; i++)
+				{
+					<tr class="border-b transition duration-300 even:bg-gray-50 hover:bg-gray-100">
+						<td class="z-10 sticky left-0 border bg-[#26556D] px-6 py-2 text-sm font-medium uppercase text-white">
+							@Model[i].EmployeeName
+						</td>
+
+						<!-- Only one hidden EmployeeID per row -->
+						<input type="hidden" name="EmployeeID" value="@Model[i].EmployeeID" />
+
+						@foreach (var permission in Model[i].Permissions.Keys.ToList())
+						{
+							<td class="border px-6 py-1 text-center">
+								<!-- EmployeeID (Hidden Input) -->
+								<input type="hidden" name="EmployeeID" value="@Model[i].EmployeeID" />
+
+								<!-- PermissionID (Hidden Input) -->
+								<input type="hidden" name="PermissionID" value="@Model[i].Permissions[permission].PermissionID" />
+
+								<!-- Checkbox to Toggle Permission -->
+								<input type="checkbox" name="Permissions[@i][@permission].HasPermission" value="true"
+								@(Model[i].Permissions[permission].HasPermission ? "checked" : "")
+									   class="h-5 w-5 cursor-pointer rounded border-gray-300 text-blue-600 focus:ring focus:ring-blue-400">
+
+								<!-- Hidden field to ensure unchecked checkboxes send "false" -->
+								<input type="hidden" name="Permissions[@i][@permission].HasPermission" value="false" />
+							</td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</form>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		document.querySelectorAll("input[type='checkbox']").forEach((checkbox) => {
+			checkbox.addEventListener("change", function () {
+				const row = this.closest("td");
+				const employeeId = row.querySelector("input[name='EmployeeID']").value;
+				const permissionId = row.querySelector("input[name='PermissionID']").value;
+				const hasPermission = this.checked;
+
+				console.log(`EmployeeID: ${employeeId}, PermissionID: ${permissionId}, HasPermission: ${hasPermission}`);
+				// Sending API request without creating a new class
+				fetch("/Permissions/UpdatePermission", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify({
+						EmployeeID: employeeId,
+						PermissionID: permissionId,
+						HasPermission: hasPermission
+					})
+				})
+				.then(response => response.json())
+				.then(result => {
+					console.log("Success:", result);
+				})
+				.catch(error => {
+					console.error("Error:", error);
+				});
+			});
+		});
+	});
+</script>

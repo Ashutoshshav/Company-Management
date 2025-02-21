@@ -1,0 +1,390 @@
+﻿@model Digitization.Models.TravelExpenses
+
+@{
+	ViewData["Title"] = "CreateTravelExpenses";
+}
+
+@* <h2 class="mb-6 text-3xl font-bold text-gray-800">Create Travel Expenses</h2> *@
+
+<div class="mx-auto space-y-2 rounded-xl bg-white shadow-lg">
+	@* <h2 class="text-3xl font-semibold text-gray-700">Travel Details</h2> *@
+	<form asp-action="CreateTravelExpenses" class="px-2 py-3">
+		<!-- Validation Summary -->
+		<div asp-validation-summary="ModelOnly" class="mb-4 text-sm text-red-500"></div>
+
+		<!-- Travel Details Section -->
+		<div class="">
+			@* <h3 class="mb-4 flex items-center gap-2 text-2xl font-semibold text-gray-800">
+                <i class="fa-solid fa-circle-info text-blue-600"></i>
+                Enter Travel Details
+            </h3> *@
+			<div class="grid-cols-1 grid items-center justify-center gap-2 lg:grid-cols-7">
+				<!-- Project Dropdown -->
+				<div class="">
+					@* <label asp-for="ProjectID" class="block text-sm font-medium text-gray-700">Project Name</label> *@
+					<div class="relative">
+						<select asp-for="ProjectID" id="projectDropdown" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+							<option value="" disabled selected>Project Name</option>
+						</select>
+					</div>
+					<span asp-validation-for="ProjectID" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Travel By -->
+				<div>
+					@* <label asp-for="TravelBy" class="block text-sm font-medium text-gray-700">Travel By</label> *@
+					<div class="relative">
+						<select asp-for="TravelBy" id="TravelByDropdown" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+							<option disabled selected>Travel By</option>
+							<option value="Public Transport">Public Transport</option>
+							<option value="Own Vehicle">Own Vehicle</option>
+							<option value="Company Vehicle">Company Vehicle</option>
+						</select>
+					</div>
+					<span asp-validation-for="TravelBy" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Transport Mode -->
+				<div>
+					@* <label asp-for="TransportMode" class="block text-sm font-medium text-gray-700">Transport Mode</label> *@
+					<div class="relative">
+						<select asp-for="TransportMode" id="TransportModeDropdown" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500">
+							<option disabled selected>Transport Mode</option>
+						</select>
+					</div>
+					<span asp-validation-for="TransportMode" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- From Place -->
+				<div>
+					@* <label asp-for="FromPlace" class="block text-sm font-medium text-gray-700">From Place</label> *@
+					<div class="relative">
+						<input asp-for="FromPlace" placeholder="Enter From Place" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+					</div>
+					<span asp-validation-for="FromPlace" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- To Place -->
+				<div>
+					@* <label asp-for="ToPlace" class="block text-sm font-medium text-gray-700">To Place</label> *@
+					<div class="relative">
+						<input asp-for="ToPlace" placeholder="Enter Destination" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+					</div>
+					<span asp-validation-for="ToPlace" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Travel Date -->
+				<div>
+					@* <label asp-for="TravelDate" class="block text-sm font-medium text-gray-700">Travel Date</label> *@
+					<div class="relative">
+						<input asp-for="TravelDate" type="date" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+					</div>
+					<span asp-validation-for="TravelDate" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Description -->
+				<div>
+					@* <label asp-for="Description" class="block text-sm font-medium text-gray-700">Description</label> *@
+					<div class="relative">
+						<input asp-for="Description" placeholder="Enter Description" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+						<svg class="-translate-y-1/2 absolute left-3 top-1/2 h-5 w-5 transform text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+					</div>
+					<span asp-validation-for="Description" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Amount -->
+				<div>
+					@* <label asp-for="Amount" class="block text-sm font-medium text-gray-700">Amount</label> *@
+					<input asp-for="Amount" placeholder="Enter Amount" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+					<span asp-validation-for="Amount" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Kilometers -->
+				<div id="KMsInput" class="hidden">
+					@* <label asp-for="KMs" class="block text-sm font-medium text-gray-700">Kilometers</label> *@
+					<input asp-for="KMs" placeholder="Enter Kilometers" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+					<span asp-validation-for="KMs" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Rate -->
+				<div id="RateInput" class="hidden">
+					@* <label asp-for="Rate" class="block text-sm font-medium text-gray-700">Rate</label> *@
+					<input asp-for="Rate" placeholder="Enter Rate" class="mt-2 block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500" />
+					<span asp-validation-for="Rate" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Description -->
+				<div class="mt-2">
+					@* <label asp-for="Remark" class="block text-sm font-medium text-gray-700">Remark</label> *@
+					<div class="col-span-1 relative">
+						<textarea asp-for="Remark" rows="1" placeholder="Remark(Optional)" class="block w-full rounded-md border border-gray-300 bg-gray-50 px-4 py-3 text-sm shadow-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500"></textarea>
+						@* <svg class="-translate-y-1/2 absolute left-3 top-1/2 h-5 w-5 transform text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"> *@
+					</div>
+					<span asp-validation-for="Remark" class="text-xs text-red-500"></span>
+				</div>
+
+				<!-- Action Button -->
+				<button type="submit" class="col-auto mt-2 flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-500 to-blue-700 px-8 py-3 text-center text-sm font-semibold text-white shadow-md transition-all duration-300 ease-in-out hover:from-blue-600 hover:to-blue-800 focus:ring-4 focus:ring-blue-400 focus:ring-opacity-50">
+					<span class="flex items-center gap-2">
+						<svg class="h-5 w-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+						</svg>
+						Submit
+					</span>
+				</button>
+			</div>
+		</div>
+	</form>
+	<hr class="mx-3" />
+	<!-- LIST OF MATERIAL EXPENSES -->
+	<div class="rounded-lg bg-white px-1 shadow-xl">
+		@* <h2 class="flex items-center gap-2 text-3xl font-semibold text-gray-800">
+			<svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M3 10h11M9 21V3M21 16h-8m4 5V11"></path>
+			</svg>
+			Your Expenses List
+		</h2> *@
+
+		<!-- Expenses Table -->
+		<div class="m-auto min-h-[440px] max-w-6xl overflow-x-auto" id="tableContainer">
+			<table class="min-w-full overflow-hidden rounded-lg border border-gray-200">
+				<thead class="bg-[#2582b0] text-xs uppercase tracking-wide text-white">
+					<tr>
+						<th class="px-3 py-2 text-center">Record ID</th>
+						<th class="px-3 py-2 text-left">Project ID</th>
+						<th class="px-3 py-2 text-left">Amount</th>
+						<th class="px-3 py-2 text-left">Expense Date</th>
+						<th class="px-3 py-2 text-left">Entry Date/Time</th>
+						@* <th class="px-3 py-2 text-left">Description</th> *@
+						<th class="px-3 py-2 text-left">Status</th>
+						<th class="px-3 py-2 text-left">Actions</th>
+					</tr>
+				</thead>
+				<tbody id="expenseTable" class="divide-y divide-gray-200 bg-white text-sm">
+					<!-- Example Row (Dynamic Data Will Be Loaded Here) -->
+					@* <tr class="transition hover:bg-gray-100">
+                            <td class="px-6 py-4">101</td>
+                            <td class="px-6 py-4">Construction Site A</td>
+                            <td class="px-6 py-4 font-semibold text-green-600">₹5,000</td>
+                            <td class="px-6 py-4">2024-01-30 12:45 PM</td>
+                            <td class="px-6 py-4">Cement purchase</td>
+                            <td class="flex justify-center space-x-3 px-6 py-4">
+                                <!-- Edit Button -->
+                                <button class="text-blue-500 transition hover:text-blue-700">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 3h10M11 7h7m-7 4h10m-10 4h7m-7 4h10"></path>
+                                    </svg>
+                                </button>
+                                <!-- Delete Button -->
+                                <button class="text-red-500 transition hover:text-red-700">
+                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </td> 
+                    </tr>*@
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		fetch('/Home/GetProjectData')
+			.then(response => response.json())
+			.then(data => {
+				console.log(data);
+				let dropdownMenu = this.getElementById("projectDropdown");
+				data.forEach(item => {
+					let option = document.createElement("option");
+					option.value = item.projectId;
+					option.textContent = item.projectName;
+
+					dropdownMenu.appendChild(option);
+				});
+			});
+
+			let projectDropdown = this.getElementById("projectDropdown");
+
+			projectDropdown.addEventListener('change', (event) => {
+				// Get the selected ProjectId and ProjectName
+				let ProjectId = document.getElementById("ProjectId");
+				ProjectId.value = event.target.value;  // Get the selected value
+			});
+
+		fetch("/Expense/AllTravelExpenses")
+			.then(response => response.json())
+			.then(data => {
+				if (!data || data.length === 0) { // Check for both null and empty array
+					console.log("No data found");
+					let tableContainer = document.getElementById('tableContainer');
+					tableContainer.classList.add('hidden');
+					// Prevent multiple "No data found" messages
+					if (!document.getElementById("noDataMessage")) {
+						let para = document.createElement("p");
+						para.classList.add('text-center', 'text-gray-600')
+						para.id = "noDataMessage"; // Assign an ID to avoid duplicates
+						para.textContent = 'No data found';
+						document.body.appendChild(para);
+					}
+					return;
+				}
+				console.log(data)
+				let tableBody = document.getElementById("expenseTable");
+				let recordID = 1;
+				data.forEach(item => {
+					const date = new Date(item.entryDTime);
+					const date2 = new Date(item.travelDate);
+
+					const formattedDate = new Intl.DateTimeFormat('en-GB', {
+					  day: '2-digit',
+					  month: 'short',
+					  year: 'numeric',
+					  hour: '2-digit',
+					  minute: '2-digit',
+					}).format(date);
+
+					const formattedDate2 = new Intl.DateTimeFormat('en-GB', {
+					  day: '2-digit',
+					  month: 'short',
+					  year: 'numeric',
+					}).format(date2);
+
+					let row = document.createElement("tr");
+					row.classList.add('transition', 'odd:bg-gray-50', 'hover:bg-gray-100');
+					row.innerHTML = `
+						<td class="px-3 py-2 text-center">${recordID++}</td>
+						<td class="px-3 py-2 text-left">${item.projectID}</td>
+						<td class="px-3 py-2 font-semibold text-green-600">₹${item.amount}</td>
+						<td class="px-3 py-2">${formattedDate2}</td>
+						<td class="px-3 py-2">${formattedDate}</td>
+						<td class="px-3 py-2">${item.approvalStatus}</td>
+						<td class="px-3 py-2">
+							<button class="flex items-center justify-center text-red-500 transition hover:text-red-700" onclick="deleteExpense(${item.recordID})">
+								<svg class="flex h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+								</svg>
+								Delete
+							</button>
+						</td>
+					`;
+					tableBody.appendChild(row);
+				});
+			});
+	});
+
+	let TravelByDropdown = document.getElementById("TravelByDropdown");
+
+	TravelByDropdown.addEventListener("change", () => {
+		let dropdownValue = TravelByDropdown.value;
+		let TransportModeDropdown = document.getElementById("TransportModeDropdown");
+
+		if(dropdownValue == "Public Transport") {
+			TransportModeDropdown.innerHTML = "";
+			let KMsInput = document.getElementById("KMsInput");
+			let RateInput = document.getElementById("RateInput");
+
+			let newOption = document.createElement("option");
+			newOption.text = "Transport Mode";
+			newOption.disabled = true;
+			newOption.selected = true;
+			TransportModeDropdown.appendChild(newOption);
+
+			let newOption1 = document.createElement("option");
+			newOption1.value = "By Bus";
+			newOption1.text = "By Bus";
+			TransportModeDropdown.appendChild(newOption1);
+
+			let newOption2 = document.createElement("option");
+			newOption2.value = "By Auto";
+			newOption2.text = "By Auto";
+			TransportModeDropdown.appendChild(newOption2);
+
+			let newOption3 = document.createElement("option");
+			newOption3.value = "By Cab";
+			newOption3.text = "By Cab";
+			TransportModeDropdown.appendChild(newOption3);
+
+			let newOption4 = document.createElement("option");
+			newOption4.value = "By Air";
+			newOption4.text = "By Air";
+			TransportModeDropdown.appendChild(newOption4);
+
+			let newOption5 = document.createElement("option");
+			newOption5.value = "By Train";
+			newOption5.text = "By Train";
+			TransportModeDropdown.appendChild(newOption5);
+
+			let newOption6 = document.createElement("option");
+			newOption6.value = "Other";
+			newOption6.text = "Other";
+			TransportModeDropdown.appendChild(newOption6);
+
+			KMsInput.classList.add("hidden");
+			RateInput.classList.add("hidden");
+		} else if(dropdownValue == "Own Vehicle") {
+			let KMsInput = document.getElementById("KMsInput");
+			let RateInput = document.getElementById("RateInput");
+
+			TransportModeDropdown.innerHTML = "";
+
+			let newOption = document.createElement("option");
+			newOption.text = "Transport Mode";
+			newOption.disabled = true;
+			newOption.selected = true;
+			TransportModeDropdown.appendChild(newOption);
+
+			let newOption1 = document.createElement("option");
+			newOption1.value = "By 2W";
+			newOption1.text = "By 2W";
+			TransportModeDropdown.appendChild(newOption1);
+
+			let newOption2 = document.createElement("option");
+			newOption2.value = "By 4W";
+			newOption2.text = "By 4W";
+			TransportModeDropdown.appendChild(newOption2);
+
+			KMsInput.classList.remove("hidden");
+			RateInput.classList.remove("hidden");
+		} else {
+			let KMsInput = document.getElementById("KMsInput");
+			let RateInput = document.getElementById("RateInput");
+
+			TransportModeDropdown.innerHTML = "";
+
+			let newOption = document.createElement("option");
+			newOption.text = "Transport Mode";
+			newOption.disabled = true;
+			newOption.selected = true;
+			TransportModeDropdown.appendChild(newOption);
+
+			let newOption1 = document.createElement("option");
+			newOption1.value = "By 2W";
+			newOption1.text = "By 2W";
+			TransportModeDropdown.appendChild(newOption1);
+
+			let newOption2 = document.createElement("option");
+			newOption2.value = "By 4W";
+			newOption2.text = "By 4W";
+			TransportModeDropdown.appendChild(newOption2);
+
+			KMsInput.classList.add("hidden");
+			RateInput.classList.add("hidden");
+		}
+	})
+
+	let projectDropdown = this.getElementById("projectDropdown");
+
+	projectDropdown.addEventListener('change', (event) => {
+		// Get the selected ProjectId and ProjectName
+		let ProjectId = document.getElementById("ProjectId");
+		ProjectId.value = event.target.value;  // Get the selected value
+	});
+</script>
