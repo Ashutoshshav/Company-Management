@@ -1,0 +1,98 @@
+﻿@model Digitization.Models.UserLeaves
+
+<!-- Popup Modal -->
+<div id="leaveModal" class="fixed inset-0 z-30 mt-20 flex hidden items-center justify-center bg-black bg-opacity-50">
+	<div class="w-full max-w-md rounded-lg bg-white p-6 shadow-lg">
+		<h2 class="text-xl font-semibold text-gray-700">Apply for Leave</h2>
+
+		<!-- Leave Form -->
+		<form class="mt-4 space-y-4" id="leaveForm" method="post" action="/Home/ApplyLeave">
+			<div>
+				<label class="block text-sm font-medium text-gray-600">Reason</label>
+				<input asp-for="Reason" class="w-full rounded-md border p-2" placeholder="Enter Reason" />
+				<span asp-validation-for="Reason" class="text-sm text-red-500"></span>
+			</div>
+
+			<div class="flex gap-2">
+				<div class="w-full">
+					<label class="block text-sm font-medium text-gray-600">Start Date</label>
+					<input asp-for="LeaveStart" type="date" class="w-full rounded-md border p-2">
+					<span asp-validation-for="LeaveStart" class="text-sm text-red-500"></span>
+				</div>
+
+				<div class="w-full">
+					<label class="block text-sm font-medium text-gray-600">End Date</label>
+					<input asp-for="LeaveEnd" type="date" class="w-full rounded-md border p-2">
+					<span asp-validation-for="LeaveEnd" class="text-sm text-red-500"></span>
+				</div>
+			</div>
+
+			<div>
+				<label class="block text-sm font-medium text-gray-600">Description</label>
+				<textarea asp-for="Description" class="w-full rounded-md border p-2" rows="3" placeholder="Enter Description"></textarea>
+				<span asp-validation-for="Description" class="text-sm text-red-500"></span>
+			</div>
+
+			<!-- Buttons -->
+			<div class="flex justify-end space-x-2">
+				<button type="button" onclick="closeModal()" class="rounded-md bg-gray-200 px-4 py-2 text-gray-600 hover:bg-gray-300">
+					Cancel
+				</button>
+				<button type="submit" class="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700">
+					Submit
+				</button>
+			</div>
+		</form>
+	</div>
+</div>
+
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("leaveForm").addEventListener("submit", function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            var form = event.target;
+            var formData = new FormData(form);
+
+            fetch(form.action, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageBox = document.getElementById("messageBox");
+                messageBox.classList.remove("hidden"); // Show message box
+
+                if (data.success) {
+                    messageBox.textContent = data.message;
+                    messageBox.classList.add("bg-green-500"); // Success color
+                    messageBox.classList.remove("bg-red-500");
+
+                    setTimeout(() => {
+                        messageBox.classList.add("hidden");
+                        closeModal(); // Close the modal after success
+                    }, 2000);
+                } else {
+                    messageBox.textContent = "Please fix the errors.";
+                    messageBox.classList.add("bg-red-500"); // Error color
+                    messageBox.classList.remove("bg-green-500");
+
+                    // ✅ Clear existing error messages
+                    document.querySelectorAll(".error-message").forEach(el => el.remove());
+
+                    // ✅ Show validation errors
+                    for (const [key, messages] of Object.entries(data.errors)) {
+                        const inputField = document.querySelector(`[name="${key}"]`);
+                        if (inputField) {
+                            const errorDiv = document.createElement("div");
+                            errorDiv.classList.add("text-red-500", "text-sm", "mt-1", "error-message");
+                            errorDiv.innerText = messages.join(", ");
+                            inputField.after(errorDiv);
+                        }
+                    }
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    });
+</script>

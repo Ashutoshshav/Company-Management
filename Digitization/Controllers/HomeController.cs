@@ -65,7 +65,7 @@ namespace Digitization.Controllers
             // Fetch total work duration and sum it up
             var totalWorkDurationList = await _context.DailyEmployeeEntry
                 .Where(e => e.EmployeeID == employeeId && e.TimeIn >= varDaysAgo && e.TimeIn < today)
-                .Select(e => e.WorkingDuration) // Strings like "06:47:32"
+                .Select(e => e.WorkingDuration)
                 .ToListAsync();
 
             // Convert "hh:mm:ss" strings to TimeSpan and sum them
@@ -163,7 +163,19 @@ namespace Digitization.Controllers
                 }
             ).ToListAsync();
 
-            return Json(new { tasks, PaymentApprovalList, data = data, totalWorkingHours = formattedTotalDuration, projectWorkData = projectWorkData, performanceData });
+            var appliedLeaves = await _context.UserLeaves
+                .Where(w => w.UserID == employeeId)
+                .Select(l => new
+                {
+                    l.RecordID,
+                    l.CreatedAt,
+                    l.Reason,
+                    Status = l.Status ?? "Pending",  // Default value if NULL
+                    ApprovedBy = l.ApprovedBy ?? "N/A" // Default value if NULL
+                })
+                .ToListAsync();
+
+            return Json(new { tasks, PaymentApprovalList, data = data, totalWorkingHours = formattedTotalDuration, projectWorkData = projectWorkData, performanceData, appliedLeaves });
         }
 
         public IActionResult Home()
@@ -486,6 +498,36 @@ namespace Digitization.Controllers
             ModelState.AddModelError(string.Empty, "Something Went Wrong");
 
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult LoadLeaveForm()
+        {
+            return PartialView("_ApplyLeaveForm"); // Pass it to the partial view
+        }
+
+        [HttpPost]
+        public IActionResult ApplyLeave(UserLeaves userLeaves)
+        {
+            var employeeId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            userLeaves.UserID = employeeId; // Assign user ID manually
+
+            // Remove validation for UserID and Description
+            ModelState.Remove("UserID");
+            ModelState.Remove("Description");
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Where(e => e.Value.Errors.Count > 0)
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray());
+
+                return Json(new { success = false, errors });
+            }
+
+            // Save data to the database
+            _context.UserLeaves.Add(userLeaves);
+            _context.SaveChanges();
+
+            return Json(new { success = true, message = "Leave Applied Successfully!" });
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

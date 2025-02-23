@@ -122,8 +122,37 @@
 					<canvas id="performanceChart" class="w-full" style=""></canvas>
 				</div>
 			</div>
+
+			<!-- HR Section -->
+			<div class="min-h-[50vh] rounded-lg border border-gray-300 bg-white">
+				<!-- Header -->
+				<div class="flex items-center justify-between rounded-t-lg border-b bg-[#26556D] px-5 py-1 font-semibold text-white">
+					<h1 class="text-md">HR</h1>
+					<div class="text-md flex space-x-4">
+						<span class="text-md cursor-pointer hover:text-gray-300" onclick="openModal('/Home/LoadLeaveForm')">Apply Leave</span>
+					</div>
+				</div>
+
+				<div class="max-h-80 overflow-y-auto">
+					<table class="w-full rounded-lg border border-gray-300 text-sm">
+						<thead class="sticky top-0 border border-gray-300 bg-[#2582b0] text-white">
+							<tr>
+								<th class="border border-gray-300 p-2 text-center">Reason</th>
+								<th class="border border-gray-300 p-2 text-center">Date</th>
+								<th class="border border-gray-300 p-2 text-center">Status</th>
+							</tr>
+						</thead>
+						<tbody id="appliedLeaves" class="divide-y divide-gray-200 bg-white"></tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
+
+	<div id="messageBox" class="mt-2 hidden rounded-md p-2 text-center text-white"></div>
+
+	<!-- Modal Placeholder -->
+	<div id="modalContainer"></div>
 </div>
 
 <script>
@@ -366,6 +395,42 @@
 					}
 				}
 			});
+
+			let appliedLeaves = data.appliedLeaves;
+
+			populateLeaveTable(appliedLeaves);
 		});
 	});
+
+	function openModal(url) {
+		fetch(url)
+			.then(response => { console.log(response); return response.text(); })
+			.then(data => {
+				// console.log(data);
+				document.getElementById("modalContainer").innerHTML = data;
+				document.getElementById("leaveModal").classList.remove("hidden");
+			});
+	}
+
+	function closeModal() {
+		document.getElementById("leaveModal").classList.add("hidden");
+	}
+
+	// Function to populate table
+	function populateLeaveTable(leaves) {
+		const tbody = document.getElementById("appliedLeaves");
+		tbody.innerHTML = ""; // Clear existing content
+
+		leaves.forEach(leave => {
+			const row = document.createElement("tr");
+
+			row.innerHTML = `
+				<td class="border border-gray-300 p-2 text-center">${leave.reason}</td>
+				<td class="border border-gray-300 p-2 text-center">${leave.createdAt}</td>
+				<td class="border border-gray-300 p-2 text-center">${leave.status}</td>
+			`;
+
+			tbody.appendChild(row);
+		});
+	}
 </script>

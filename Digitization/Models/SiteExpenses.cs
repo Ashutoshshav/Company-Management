@@ -29,7 +29,7 @@ public partial class SiteExpenses
     [StringLength(100, ErrorMessage = "Expense Description cannot exceed 100 characters.")]
     public string? ExpenseDescription { get; set; }
 
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Ensure it's auto-generated
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public DateTime? EntryDTime { get; set; }
     // Navigation property for the related ProjectMaster
     //public ProjectMaster ProjectMaster { get; set; }

@@ -59,5 +59,7 @@ namespace Digitization.Services
         public virtual DbSet<PerformanceTypes> PerformanceTypes { get; set; }
 
         public virtual DbSet<UserPerformance> UserPerformance { get; set; }
+
+        public virtual DbSet<UserLeaves> UserLeaves { get; set; }
     }
 }
