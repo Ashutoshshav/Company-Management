@@ -165,7 +165,7 @@
 									</a>
 									<ul class="-translate-x-1/2 z-10 submenu group-hover:block absolute left-1/2 hidden w-full transform rounded-b-md bg-[#26556D] text-white shadow-lg">
 										<li><a asp-controller="Challan" asp-action="generateChallan" class="block px-4 py-2 hover:bg-[#3A89AC]">Challan</a></li>
-										<li><a asp-controller="" asp-action="" class="block px-4 py-2 hover:bg-[#3A89AC]">PO</a></li>
+										<li><a asp-controller="PO" asp-action="GeneratePO" class="block px-4 py-2 hover:bg-[#3A89AC]">PO</a></li>
 										@if (permits.Contains("ReadMaterialCost"))
 										{
 											<li><a asp-controller="Expense" asp-action="Index" class="block rounded-b-md px-4 py-2 hover:bg-[#3A89AC]">Material Cost</a></li>
