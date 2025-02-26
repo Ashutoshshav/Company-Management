@@ -3,6 +3,8 @@ using Digitization.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -91,6 +93,8 @@ builder.Services.AddSingleton<EmailService>();
 
 // Register ScheduledEmailService as a background service
 builder.Services.AddHostedService<ScheduledEmailService>();
+
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 
 var app = builder.Build();
 

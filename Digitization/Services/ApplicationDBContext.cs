@@ -61,5 +61,7 @@ namespace Digitization.Services
         public virtual DbSet<UserPerformance> UserPerformance { get; set; }
 
         public virtual DbSet<UserLeaves> UserLeaves { get; set; }
+
+        public virtual DbSet<PORequest> PORequest { get; set; }
     }
 }

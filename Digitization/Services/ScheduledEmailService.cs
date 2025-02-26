@@ -101,7 +101,7 @@ public class ScheduledEmailService : BackgroundService
 
                     stream.Position = 0; // Reset stream position
 
-                    string[] emails = { "ashutoshshav2@gmail.com", "mukesh@icona.in" };
+                    string[] emails = { "mukesh@icona.in" };
 
                     foreach(var email in emails)
                     {

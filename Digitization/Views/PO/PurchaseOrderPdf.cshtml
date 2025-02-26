@@ -1,0 +1,124 @@
+﻿@model Digitization.Models.PORequest
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Purchase Order</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+
+        .header, .footer {
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>Purchase Order</h2>
+        <h3>Intelligent Autocontrol Pvt. Ltd.</h3>
+        <p>Plot No. 1510/46/31, Khasra no. 7727/271/1</p>
+        <p>Surat Nagar Phase-II, Dhanwapur Road, Gurgaon, Haryana - 122006</p>
+        <p>Email: sales@icona.in | GST No.: 06AACCI1709H1ZW</p>
+    </div>
+
+    <table>
+        <tr>
+            <th>Vendor Details</th>
+            <th>Shipping Details</th>
+        </tr>
+        <tr>
+            <td>
+                <p>@Model.PartyName</p>
+                <p>@Model.Address</p>
+                @* <p>GST No.: @Model.VendorGST</p> *@
+            </td>
+            <td>
+                <p>Our Company Details</p>
+                @* <p>@Model.ShippingAddress</p> *@
+                <p>GST No.: 06AACCI1709H1ZW</p>
+            </td>
+        </tr>
+    </table>
+
+    <br />
+
+    <table>
+        <tr>
+            <th>S.No</th>
+            <th>Item Code</th>
+            <th>Description</th>
+            <th>HSN</th>
+            <th>Qty</th>
+            <th>Unit</th>
+            <th>Rate</th>
+            <th>Discount%</th>
+            <th>Amount</th>
+            <th>GST Rate</th>
+            <th>GST Amount</th>
+        </tr>
+        @foreach (var item in Model.TableData)
+        {
+            <tr>
+                <td>@item.ItemCode</td>
+                <td>@item.ItemDescription</td>
+                <td>@item.HsnSac</td>
+                <td>@item.UnitRate</td>
+                <td>@item.Quantity</td>
+                <td>@item.Discount</td>
+                <td>@item.Amount</td>
+                <td>@item.GstRate</td>
+                <td>@item.GstAmount</td>
+            </tr>
+        }
+    </table>
+
+    <br />
+
+    <p><b>PO Value in Words:</b></p>
+
+    <br />
+
+    <table>
+        <tr>
+            <th>Amount</th>
+            @* <td>@Model.TotalAmount</td> *@
+        </tr>
+        <tr>
+            <th>P&F</th>
+            <td>-</td>
+        </tr>
+        <tr>
+            <th>Insurance</th>
+            <td>-</td>
+        </tr>
+        <tr>
+            <th>Freight</th>
+            <td>-</td>
+        </tr>
+        <tr>
+            <th>PO Total</th>
+            @* <td>@Model.POTotal</td> *@
+        </tr>
+    </table>
+
+    <br />
+
+    <div class="footer">
+        <p>IAPL Footer content – confidential Document Watermark</p>
+    </div>
+</body>
+</html>
